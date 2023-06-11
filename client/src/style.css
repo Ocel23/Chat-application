@@ -1,0 +1,12 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.App--container {
+    text-align: center;
+    width: 300px;
+    height: 400px;
+    border: 1px solid black;
+}
