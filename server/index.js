@@ -171,3 +171,22 @@ app.delete("/user/login", (req, res) => {
         res.send("Uživatel odhlášen.")
     })
 })
+
+
+//socket
+io.of("/chat").on("connection", socket => {
+        console.log("User connected with id" + socket.id);
+        const {roomID} = socket.handshake.query;
+        if (roomID) {
+            socket.join(roomID);
+            console.log("user was connected to the room " + roomID);
+        }
+        socket.on("message", data => {
+            console.log("message was recived")
+            io.of("/chat").to(roomID).emit("message-response", data);
+        })
+
+        socket.on("disconnect", socket => {
+            console.log("User was disconnected");
+        })
+})

@@ -1,5 +1,6 @@
+import { nanoid } from "nanoid";
 import React, {useState} from "react";
-
+import { Link } from "react-router-dom";
 
 export default function BotMessage({message, addMessage}) {
     console.log(message);
@@ -23,14 +24,13 @@ export default function BotMessage({message, addMessage}) {
         }
         
     }
-    
     return (
         <div>
             <span>Bot</span>
                 {interactions.map(interaction => {
                     return <button type="button" onClick={() => handleClick(interaction.id)} className={interaction.isActive ? "bot-page-question--active" : "bot-page-question"}>{interaction.question}</button>
                 })}
-                <button type="button">Kontaktovat podporu.</button>
+                <Link to={`chat?room=${nanoid()}`}>Podpora</Link>
                 {interactions.map(interaction => {
                     return  <div>
                         {interaction.isActive ? 
