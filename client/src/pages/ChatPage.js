@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { apiPost, apiDelete } from "../utils/api";
 import io from "socket.io-client";
 
 
@@ -19,15 +20,20 @@ export default function ChatPage() {
         });
     }
 
+    const room = searchParams.get("room")
+
     useEffect(() => {
-        const room = searchParams.get("room")
         const newSocket = io("http://localhost:5000/chat", {
             query: {
                 roomID: room
             }
         });
         setSocket(newSocket);
+        apiPost("http://localhost:5000/api/conversations", {
+            id_of_room: room,
+        })
         return () => {
+            apiDelete(`http://localhost:5000/api/conversations/${room}`);
             newSocket.close()
         }
     }, [])
@@ -46,6 +52,9 @@ export default function ChatPage() {
             socket.off("message-response")
         }   
     }, [socket])
+
+
+    
 
     return (
         <div>
