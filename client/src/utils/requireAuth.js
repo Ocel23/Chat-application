@@ -1,4 +1,4 @@
-import { apiGet, apiPut, requestError } from "./api";
+import { apiGet, requestError } from "./api";
 import { redirect } from "react-router-dom";
 
 export default async function requireAuth() {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {nanoid} from "nanoid";
 import BotMessage from "../components/BotMessage";
 
@@ -35,6 +35,10 @@ export default function BotPage() {
     function addMessage() {
         setMessages([...messages, ...fillAnswers()])
     }
+
+    useEffect(() => {
+        sessionStorage.setItem("count", "0");
+    }, [])
 
     return (
         <div className="Bot-page--container">

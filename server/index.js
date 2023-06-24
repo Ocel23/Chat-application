@@ -29,15 +29,15 @@ app.use(expressSession({
 
 const requireAuth = (req, res, next) => {
     if (!req.session.user) {
-        return res.status(403).send("Nemáte na tohle oprávnění!")
+        return res.status(403).send("You don't have permission to do this.")
     }
     next();
 }
 
 //připojíme databázi
 mongoose.connect('mongodb://127.0.0.1:27017/chatapp', { useNewUrlParser: true })
-    .then(console.log("Connect to database"))
-    .catch((err) => console.log("Can not connect to database Error message: " + err))
+    .then(console.log("Connected to database."))
+    .catch((err) => console.log("Cannot connected to database. " + err))
 
 server.listen(port, () => {
     console.log("Listening on port " + port)
@@ -57,62 +57,122 @@ const userSchema = new mongoose.Schema({
 const conversationSchema = new mongoose.Schema({
     user_ID: [mongoose.Schema.Types.ObjectId],
     id_of_room: String,
+    users: Number,
     dateAdded: {
         type: Date,
         default: Date.now
     }
 })
 
+const messageSchema = new mongoose.Schema({
+    text: String,
+    id_of_room: String,
+    dateAdded: {
+        type: Date,
+        default: Date.now
+    },
+})
 
 
 //vytvoříme modely
 const Conversation = mongoose.model("conversation", conversationSchema);
 const User = mongoose.model("user", userSchema);
+const Message = mongoose.model("message", messageSchema);
 
 
 //POST požadavek na konverzace
 app.post("/api/conversations", (req, res) => {
     Conversation.create(req.body)
         .then(result => res.send(result))
-        .catch((err) => res.send("Požadavek na vytvoření konverzace selhal!" + err))
+        .catch(() => res.send("Could not create conversation"))
 })
 
 //GET požadavek na konverzace
 app.get("/api/conversations", (req, res) => {
     Conversation.find()
         .then(result => res.send(result))
-        .catch(() => res.send("Nebylo možné získat údaje o konverzacích!"));
+        .catch(() => res.send("Conversion data could not be retrieved"));
 })
 
 //GET požadavek na konverzaci
-/*
-app.get("/api/conversations/:id", (req, res) => {
-    Conversation.findById(req.params.id)
-        .then(result => {
-            if (result) {
-                res.send(result);
-            } else {
-                res.status(404).send("Konverzace nebyla nalezena!")
-            }
-            
+
+app.put("/api/conversations/:room", (req, res) => {
+    Conversation.findOne().where("id_of_room").equals(req.params.room)
+        .then((conversation) => {
+            Conversation.findByIdAndUpdate(conversation._id, req.body)
+                .then(result => {
+                    res.send(result);
+                })
+                .catch(() => res.send("Conversation could not updated"));    
         })
-        .catch(() => res.send("Nebylo možné získat údaje o konverzaci!"));
+        .catch(() => res.status(404).send("Conversation was not found"));
+    
 })
-*/
+
 app.delete("/api/conversations/:room", (req, res) => {
     Conversation.findOne().where("id_of_room").equals(req.params.room)
         .then(conversation => {
-            if (conversation) {
-                Conversation.findByIdAndDelete(conversation._id)
-                    .then(result => {
-                        res.send(result);
-                    })
-                    .catch(() => {
-                        res.send("Chyba při mazání filmu.")
-                    })
-            } else {
-                res.status(404).send("Konverzace nebyla nalezena!")
-            }
+            Conversation.findByIdAndDelete(conversation._id)
+                .then(result => {
+                    res.send(result);
+                })
+                .catch(() => {
+                    res.send("Conversation could not deleted")
+                })
+        })
+        .catch(() => {
+            res.status(404).send("Conversation was not found")
+        })
+})
+
+app.get("/api/conversations/:room", (req, res) => {
+    Conversation.findOne().where("id_of_room").equals(req.params.room)
+        .then(conversation => {
+           res.json(conversation);
+        })
+        .catch(() => res.status(404).send("Conversation was not found"))
+})
+
+app.post("/api/conversationMessages", (req, res) => {
+    Message.create(req.body)
+        .then(result => {
+            res.send(result);
+        })
+        .catch(() => {
+            res.send("Could not create message");
+        })
+});
+
+//později přistupovat přes objekt konverzace v databázi místo předání id roomky
+
+app.get("/api/conversationMessages/:roomID", (req, res) => {
+    Message.find().where("id_of_room").equals(req.params.roomID)
+        .then(result => {
+            res.send(result);
+        })
+        .catch(() => {
+            res.status(404).send("Could not find any message from this room")
+        })
+})
+
+
+app.delete("/api/conversationMessages/:roomID", (req, res) => {
+    Message.deleteMany().where("id_of_room").equals(req.params.roomID)
+        .then(result => {
+            res.send(result);
+        })
+        .catch(() => {
+            res.status(404).send("No message with this room id was not found")
+        })
+})
+
+app.delete("/api/conversationMessages", (req, res) => {
+    Message.deleteMany()
+        .then(result => {
+            res.send(result);
+        })
+        .catch(() => {
+            res.send("Cannot delete all messages")
         })
 })
 //LOGIN SYSTEM
@@ -121,27 +181,23 @@ app.delete("/api/conversations/:room", (req, res) => {
 
 
 app.post("/user/register", (req, res) => {
-    const users = User.findOne().where("isAdmin").equals(true)
-       
-            
+   User.findOne().where("isAdmin").equals(true)
             const userData = req.body;
             const saltRounds = 10;
 
             const createdUser = {
-            email: userData.email,
-            passwordHash: bcrypt.hashSync(userData.password, saltRounds),
-            isOnline: false
+                email: userData.email,
+                passwordHash: bcrypt.hashSync(userData.password, saltRounds),
+                isOnline: false
         }
-
         User.create(createdUser)
             .then(savedUser => {
                 const result = savedUser.toObject();
                 delete result.passwordHash;
                 res.send(result);
             })
-            .catch(() => res.send("Požadavek na uložení uživatele selhal!"))    
+            .catch(() => res.send("User could not saved"))    
         })
-
 
 //POST požadavek na login
 
@@ -150,13 +206,13 @@ app.post("/user/login", (req, res) => {
   
     User.findOne().where("email").equals(email)
         .then(user => {
-            if (user || bcrypt.compareSync(password, user.passwordHash) || password === user.passwordHash) {
+            if (bcrypt.compareSync(password, user.passwordHash)) {
                 const sessionUser = user.toObject();
                 delete sessionUser.passwordHash;
                 req.session.user = sessionUser;
                 req.session.save(err => {
                     if (err) {
-                        return res.status(500).send("Nastal chyba při přihlašování!")
+                        return res.status(500).send("An error occurred while logging in.")
                     }
                     const sessionData = {
                         _id: user.id,
@@ -166,12 +222,10 @@ app.post("/user/login", (req, res) => {
                     res.send(sessionData);
                 })  
             } else {
-                return res.status(400).send("Email nebo heslo nenalezeno")  
+                return res.status(400).send("Incorrect password"); 
             }
-          
-            
         })
-        .catch(() => res.status(500).send("Email nebyl nalezen!"))
+        .catch(() => res.status(500).send("Email could not found"));
 })
 
 //GET požadavek na login
@@ -179,7 +233,7 @@ app.post("/user/login", (req, res) => {
 app.get("/user/login",  (req, res) => {
     const user = req.session.user;
     if (!user) {
-        return res.status(401).send("Nejsi přihlášen!")
+        return res.status(401).send("You're not logged in")
     }
     res.send(user);
 })
@@ -188,39 +242,29 @@ app.get("/user/login",  (req, res) => {
 app.delete("/user/login", (req, res) => {
     req.session.destroy(err => {
         if (err) {
-            res.status(500).send("Chyba při mazání session!")
+            res.status(500).send("There was an error logging out")
         }
-        res.send("Uživatel odhlášen.")
+        res.send("User was log out")
     })
 })
 
 app.get("/users/online", (req, res) => {
-    User.find().where("isOnline").equals(true)
+    User.findOne().where("isOnline").equals(true)
         .then(user => {
-            if (user) {
-                res.send(user);
-            } else {
-                res.status(404).send("Žádný uživatel není online.")
-            }
+            res.send(user);
         })
         .catch(() => {
-            res.send("Nebylo možné získat údaje o přihlášených uživatelých");
+            res.status(404).send("No admin is not online");
         })
 })
 
 app.put("/users/online/:id", (req, res) => {
     User.findByIdAndUpdate(req.params.id, req.body)
         .then(user => {
-            if (user) {
-                const result = user.toObject();
-                delete result.passwordHash;
-                res.send(result);
-            } else {
-                res.status(404).send("Uživatel nebyl nalezen!")
-            }
+            res.send(user);
         })
         .catch(() =>{
-            res.send("Při změně stavu uživatele nastala se stala chyba.")
+            res.send("The user status could not be changed")
         })
 })
 
@@ -241,14 +285,13 @@ app.get("/users/online/:id", (req, res) => {
 
 //socket
 io.of("/chat").on("connection", socket => {
-        console.log("User connected with id" + socket.id);
         const {roomID} = socket.handshake.query;
         if (roomID) {
+            console.log("User connected with id" + socket.id);
             socket.join(roomID);
-            console.log("user was connected to the room " + roomID);
+            console.log("User was connected to the room: " + roomID);
         }
         socket.on("message", data => {
-            console.log("message was recived")
             io.of("/chat").to(roomID).emit("message-response", data);
         })
 
@@ -286,7 +329,7 @@ app.post("/email/send", (req, res) => {
     transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
             console.log(err);
-            res.status(500).send("Email nebylo možné odeslat.")
+            res.status(500).send("Email could not send")
         } else {
             res.json(info.response);
         }

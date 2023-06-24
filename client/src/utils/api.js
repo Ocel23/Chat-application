@@ -11,6 +11,7 @@ async function fetchData(url, requestOptions) {
     }
 }
 
+
 export function apiPost(url, data) {
     const requestOptions = {
         method: "POST",
@@ -52,7 +53,7 @@ export function apiPut(url, data) {
 
 export class requestError extends Error {
     constructor (response) {
-        super("Network response was not ok: " + response.statusText);
+        super("Network response was not ok: " + response.statusText + " " + response.status);
         this.response = response;
     }
 }

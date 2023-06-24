@@ -1,46 +1,28 @@
 import React, { useEffect } from "react";
-import { apiGet, apiPut } from "../utils/api";
-import { defer, Await, useLoaderData, useNavigate} from "react-router-dom";
+import { apiGet } from "../utils/api";
+import { defer, Await, useLoaderData, useNavigate, useLocation} from "react-router-dom";
 import requireAuth from "../utils/requireAuth";
+import { setOffline, setOnline } from "../utils/status";
 
 export async function loader() {
-    const loginUser = await requireAuth();
-    const data = apiGet("http://localhost:5000/api/conversations");
+    try {
+        const loginUser = await requireAuth();
+        const online = await setOnline();
+    } catch(err) {
+        throw err;
+    }
+    const data =  await apiGet("http://localhost:5000/api/conversations");    
     return defer({convesations : data});
 }
 
 export default function Dashboard() {
-    
+    const location = useLocation();
     const convesations = useLoaderData();
     const navigate = useNavigate();
-    //dodělat useState
- 
-    useEffect(() => {
-        window.addEventListener("beforeunload", () => {
-            async function setOnline() {
-                try {
-                    const userData = await apiGet("http://localhost:5000/user/login");
-                    const statusOfUser = apiPut(`http://localhost:5000/users/online/${userData._id}`, {isOnline: true})
-                } catch(err) {
-                    throw err;
-                }
-            }
-            setOnline();
-        })
 
-        return () => {
-            window.removeEventListener("beforeunload", () => {
-                async function setOffline() {
-                    try {
-                        const userData = await apiGet("http://localhost:5000/user/login");
-                        const statusOfUser = apiPut(`http://localhost:5000/users/online/${userData._id}`, {isOnline: false})
-                    } catch(err) {
-                        throw err;
-                    }
-                }
-                setOffline();
-            })
-        }
+    useEffect(() => {
+        window.addEventListener("beforeunload", setOffline)
+        return () => window.removeEventListener("beforeunload", setOffline);
     }, [])
     
     function render(conversations) {

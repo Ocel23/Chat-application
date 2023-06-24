@@ -3,7 +3,6 @@ import React, {useState} from "react";
 import { Link } from "react-router-dom";
 
 export default function BotMessage({message, addMessage}) {
-    console.log(message);
     const [interactions, setInterecaction] = useState(message);
     const [countOfActive, setCountOfActive] = useState(0);
 
