@@ -11,12 +11,13 @@ const io = require("socket.io")(server, {
 const port = 5000;
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-//nadefinujeme knihovny
+//add libraries
 
 require("./cors")(app);
 
+//convert each response data to json
 app.use(express.json())
-//automaticky každý route je parsován do json
+
 app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
@@ -27,6 +28,7 @@ app.use(expressSession({
     }
 }));
 
+//function for requireAuth
 const requireAuth = (req, res, next) => {
     if (!req.session.user) {
         return res.status(403).send("You don't have permission to do this.")
@@ -34,7 +36,7 @@ const requireAuth = (req, res, next) => {
     next();
 }
 
-//připojíme databázi
+//connect to db
 mongoose.connect('mongodb://127.0.0.1:27017/chatapp', { useNewUrlParser: true })
     .then(console.log("Connected to database."))
     .catch((err) => console.log("Cannot connected to database. " + err))
@@ -43,7 +45,7 @@ server.listen(port, () => {
     console.log("Listening on port " + port)
 })
 
-//vytvoříme šablony objektů v dabázi
+//create schemas for documents in collection
 const userSchema = new mongoose.Schema({
     email: {
         type: String, 
@@ -55,7 +57,6 @@ const userSchema = new mongoose.Schema({
 
 
 const conversationSchema = new mongoose.Schema({
-    user_ID: [mongoose.Schema.Types.ObjectId],
     id_of_room: String,
     users: Number,
     dateAdded: {
@@ -66,7 +67,10 @@ const conversationSchema = new mongoose.Schema({
 
 const messageSchema = new mongoose.Schema({
     text: String,
-    id_of_room: String,
+    room: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "conversation"
+    },
     dateAdded: {
         type: Date,
         default: Date.now
@@ -74,27 +78,27 @@ const messageSchema = new mongoose.Schema({
 })
 
 
-//vytvoříme modely
+//create models
 const Conversation = mongoose.model("conversation", conversationSchema);
 const User = mongoose.model("user", userSchema);
 const Message = mongoose.model("message", messageSchema);
 
 
-//POST požadavek na konverzace
+//POST request for conversations
 app.post("/api/conversations", (req, res) => {
     Conversation.create(req.body)
         .then(result => res.send(result))
         .catch(() => res.send("Could not create conversation"))
 })
 
-//GET požadavek na konverzace
+//GET request for conversations
 app.get("/api/conversations", (req, res) => {
     Conversation.find()
         .then(result => res.send(result))
         .catch(() => res.send("Conversion data could not be retrieved"));
 })
 
-//GET požadavek na konverzaci
+//PUT request for conversations
 
 app.put("/api/conversations/:room", (req, res) => {
     Conversation.findOne().where("id_of_room").equals(req.params.room)
@@ -109,6 +113,7 @@ app.put("/api/conversations/:room", (req, res) => {
     
 })
 
+//DELETE request for conversations
 app.delete("/api/conversations/:room", (req, res) => {
     Conversation.findOne().where("id_of_room").equals(req.params.room)
         .then(conversation => {
@@ -125,6 +130,7 @@ app.delete("/api/conversations/:room", (req, res) => {
         })
 })
 
+//GET  request for conversations by room
 app.get("/api/conversations/:room", (req, res) => {
     Conversation.findOne().where("id_of_room").equals(req.params.room)
         .then(conversation => {
@@ -133,6 +139,7 @@ app.get("/api/conversations/:room", (req, res) => {
         .catch(() => res.status(404).send("Conversation was not found"))
 })
 
+//GET request for conversations messages
 app.post("/api/conversationMessages", (req, res) => {
     Message.create(req.body)
         .then(result => {
@@ -143,10 +150,10 @@ app.post("/api/conversationMessages", (req, res) => {
         })
 });
 
-//později přistupovat přes objekt konverzace v databázi místo předání id roomky
+//GET request for messages by room id
 
 app.get("/api/conversationMessages/:roomID", (req, res) => {
-    Message.find().where("id_of_room").equals(req.params.roomID)
+    Message.find().populate("room").where("id_of_room").equals(req.params.roomID)
         .then(result => {
             res.send(result);
         })
@@ -155,9 +162,9 @@ app.get("/api/conversationMessages/:roomID", (req, res) => {
         })
 })
 
-
+//DELETE request for messages by room id
 app.delete("/api/conversationMessages/:roomID", (req, res) => {
-    Message.deleteMany().where("id_of_room").equals(req.params.roomID)
+    Message.deleteMany().populate("room").where("id_of_room").equals(req.params.roomID)
         .then(result => {
             res.send(result);
         })
@@ -166,6 +173,7 @@ app.delete("/api/conversationMessages/:roomID", (req, res) => {
         })
 })
 
+/*
 app.delete("/api/conversationMessages", (req, res) => {
     Message.deleteMany()
         .then(result => {
@@ -175,11 +183,11 @@ app.delete("/api/conversationMessages", (req, res) => {
             res.send("Cannot delete all messages")
         })
 })
+*/
+
 //LOGIN SYSTEM
 
 //POST požadavek registraci
-
-
 app.post("/user/register", (req, res) => {
    User.findOne().where("isAdmin").equals(true)
             const userData = req.body;
@@ -229,7 +237,6 @@ app.post("/user/login", (req, res) => {
 })
 
 //GET požadavek na login
-
 app.get("/user/login",  (req, res) => {
     const user = req.session.user;
     if (!user) {
@@ -248,6 +255,7 @@ app.delete("/user/login", (req, res) => {
     })
 })
 
+//GET request for online users
 app.get("/users/online", (req, res) => {
     User.findOne().where("isOnline").equals(true)
         .then(user => {
@@ -258,6 +266,7 @@ app.get("/users/online", (req, res) => {
         })
 })
 
+//PUT request for online user by id
 app.put("/users/online/:id", (req, res) => {
     User.findByIdAndUpdate(req.params.id, req.body)
         .then(user => {
@@ -301,7 +310,6 @@ io.of("/chat").on("connection", socket => {
 })
 
 //email
-
 app.post("/email/send", (req, res) => {
     const {email, subject, message} = req.body;
     const user = "ocel23dev@gmail.com";
@@ -334,6 +342,5 @@ app.post("/email/send", (req, res) => {
             res.json(info.response);
         }
     })
-    
     
 })

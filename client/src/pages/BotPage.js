@@ -3,6 +3,7 @@ import {nanoid} from "nanoid";
 import BotMessage from "../components/BotMessage";
 
 export default function BotPage() {
+    //create data
     const data = 
         [
             {
@@ -13,38 +14,43 @@ export default function BotPage() {
             
         ]
 
-    const [messages, setMessages] = useState(fillAnswers());
+    //create messages with properties
+    const [messages, setMessages] = useState(createAnswers());
 
-    function fillAnswers() {
+    //function for create messages
+    function createAnswers() {
         const array = [];
         data.forEach(item => {
-            const propresties = [];
-            for (let index in item) {
-                propresties.push({
+            const propersties = [];
+            for (let property in item) {
+                propersties.push({
                     id: nanoid(),
                     isActive: false,
-                    question: index,
-                    answer: item[index]
+                    question: property,
+                    answer: item[property]
                 });
             }
-            array.push(propresties);
+            array.push(propersties);
         })
         return array;
     }
 
+    //function for create another message
     function addMessage() {
-        setMessages([...messages, ...fillAnswers()])
+        setMessages([...messages, ...createAnswers()])
     }
 
+    //create count in session storage for chat page
     useEffect(() => {
         sessionStorage.setItem("count", "0");
     }, [])
 
+    //output
     return (
         <div className="Bot-page--container">
             <div className="bot-page-message--container">
                 {messages.map((message, index) => {
-                    return <BotMessage key={index} message={message} addMessage={addMessage} />
+                    return <BotMessage key={message.id} message={message} addMessage={addMessage} />
                 })}
             </div>
         </div>

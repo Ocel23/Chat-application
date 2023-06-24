@@ -6,18 +6,21 @@ import { setOffline, setOnline } from "../utils/status";
 
 export async function loader() {
     try {
+        //require auth
         const loginUser = await requireAuth();
+        //set status of admin to online
         const online = await setOnline();
     } catch(err) {
         throw err;
     }
+    //get all conversations
     const data =  await apiGet("http://localhost:5000/api/conversations");    
-    return defer({convesations : data});
+    return defer({conversations : data});
 }
 
 export default function Dashboard() {
-    const location = useLocation();
-    const convesations = useLoaderData();
+
+    const conversations = useLoaderData();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -39,6 +42,7 @@ export default function Dashboard() {
         )
     }
 
+    //function for join room by id
     function joinRoom(id) {
         navigate(`/chat?room=${id}`);
     }
@@ -47,7 +51,7 @@ export default function Dashboard() {
         <div>
             <h1>Dashboard</h1>
             <React.Suspense fallback={<h2>Loading...</h2>}>
-                    <Await resolve={convesations.convesations}>
+                    <Await resolve={conversations.convesations}>
                         {render}
                     </Await>
             </React.Suspense>
