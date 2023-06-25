@@ -61,8 +61,9 @@ export async function loader({ request}) {
 
 export default function ChatPage() {
 
-    const room = searchParams.get("room")
     const [searchParams, setSearchParams] = useSearchParams();
+    const [isAdmin, setIsAdmin] = useState(false);
+    const room = searchParams.get("room")
     const navigate = useNavigate();
     const messagesData = useLoaderData();
     const [socket, setSocket] = useState();
@@ -95,13 +96,30 @@ export default function ChatPage() {
         });
         setSocket(newSocket);
         //delete room and messages on leave chat
-        window.addEventListener("beforeunload", deleteRoom);
-        window.addEventListener("beforeunload", deleteAllMessages)
+        async function checkIfisAdmin() {
+            try {
+                await apiGet("http://localhost:5000/user/login"); 
+                setIsAdmin(true);   
+            } catch(err) {
+                if (err instanceof requestError && err.response.status === 401) {
+                    window.addEventListener("beforeunload", deleteRoom);
+                    window.addEventListener("beforeunload", deleteAllMessages)
+                    return;
+                } else {
+                    throw err;
+                }
+            }
+            
+        }
+        checkIfisAdmin();
         return () => {
-            window.removeEventListener("beforeunload", deleteRoom);
-            window.removeEventListener("beforeunload", deleteAllMessages)
-            //remove count from session storage
-            sessionStorage.removeItem("count");
+            if (!isAdmin) {
+                window.removeEventListener("beforeunload", deleteRoom);
+                window.removeEventListener("beforeunload", deleteAllMessages) 
+                //remove count from session storage
+                sessionStorage.removeItem("count");   
+            }
+            redirect("/");
             newSocket.close()
         }
     }, [])

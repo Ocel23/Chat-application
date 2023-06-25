@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
-import { apiGet } from "../utils/api";
+import { apiGet, apiPut } from "../utils/api";
 import { defer, Await, useLoaderData, useNavigate, useLocation} from "react-router-dom";
 import requireAuth from "../utils/requireAuth";
-import { setOffline, setOnline } from "../utils/status";
 
 export async function loader() {
     try {
@@ -18,6 +17,25 @@ export async function loader() {
     return defer({conversations : data});
 }
 
+//status functions
+async function setOffline() {
+    try {
+        const userData2 = await apiGet("http://localhost:5000/user/login");
+        await apiPut(`http://localhost:5000/users/online/${userData2._id}`, {isOnline: false});
+    } catch(err) {
+        throw err;
+    }
+}
+
+async function setOnline() {
+    try {
+        const userData1 = await apiGet("http://localhost:5000/user/login");
+        await apiPut(`http://localhost:5000/users/online/${userData1._id}`, {isOnline: true})
+    } catch(err) {
+        throw err;
+    }
+}
+
 export default function Dashboard() {
 
     const conversations = useLoaderData();
@@ -25,8 +43,11 @@ export default function Dashboard() {
 
     useEffect(() => {
         window.addEventListener("beforeunload", setOffline)
-        return () => window.removeEventListener("beforeunload", setOffline);
+        return () => {
+            window.removeEventListener("beforeunload", setOffline);
+        }
     }, [])
+
     
     function render(conversations) {
         const elements = conversations.map(item => 
@@ -51,7 +72,7 @@ export default function Dashboard() {
         <div>
             <h1>Dashboard</h1>
             <React.Suspense fallback={<h2>Loading...</h2>}>
-                    <Await resolve={conversations.convesations}>
+                    <Await resolve={conversations.conversations}>
                         {render}
                     </Await>
             </React.Suspense>
