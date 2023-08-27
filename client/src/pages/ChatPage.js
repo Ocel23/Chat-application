@@ -1,59 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { Await, defer, redirect, useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { defer, redirect, useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { apiPost, apiDelete, apiGet , requestError, apiPut } from "../utils/api";
 import io from "socket.io-client";
+import Header from "../components/Header"
+import dateFormater from "../utils/dateFormater";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content'
+import MessageTemplate from "../components/MessagesTemplates";
+import ChatMessages from "../components/ChatMessages";
+import ChatForm from "../components/ChatForm";
+import AppIcon from "../components/AppIcon";
+import showServerError from "../utils/showServerError";
 
 export async function loader({ request}) {
-    //get data from session storage
-    const dataFromSession = sessionStorage.getItem("count");
-    const parseData = parseInt(dataFromSession);
 
+    //get id of room from query
     const room = new URL(request.url).searchParams.get("room");
-
     //get online users for count, if nobody is online then redirect to email page
     await apiGet("http://localhost:5000/users/online").catch(() => {throw redirect("/email")});
-    
-    if (parseData === 0) {
-        try {
-                //get user info
-                await apiGet("http://localhost:5000/user/login")
-                //put count of user in conversations to 2 - join admin
-                async function changeCount1() {
-                    await apiPut(`http://localhost:5000/api/conversations/${room}`, {users: 2})   
-                }
-                changeCount1();
-                
-        } catch(err) {
-                //if not authorized, normal user
-                if (err instanceof requestError && err.response.status === 401) {
-                    //get data of conversation by id
-                    const conversationInfo = await apiGet(`http://localhost:5000/api/conversations/${room}`);
-                    //statement for check if data
-                    if (conversationInfo !== null) {
-                        //statement for check count of users in conversation
-                        if (conversationInfo.users >= 1) {
-                            return redirect("/");
-                        }
-                    }
-                    //function for create conversation
-                    async function createConversation() {
-                        await apiPost("http://localhost:5000/api/conversations", {
-                            id_of_room: room,
-                            users: 0
-                        })    
-                    }
-                    createConversation();
-                    async function changeCount2() {
-                        await apiPut(`http://localhost:5000/api/conversations/${room}`, {users: 1});
-                    }
-                    changeCount2();
-                } else {
-                    throw err;
-                }    
-        }
+    //get count of connected user to select room
+    const countOfConnectUsers = await apiGet(`http://localhost:5000/api/conversations/${room}`);
+    if (countOfConnectUsers == null) {
+        //create conversation
+        await apiPost("http://localhost:5000/api/conversations", {
+            id_of_room: room,
+            users: 1
+        });
+        const statistics = await apiGet("http://localhost:5000/statistics");   
+        await apiPut("http://localhost:5000/statistics", {
+            countOfCreatedConversations: statistics[0].countOfCreatedConversations + 1,
+            dateOfLastCreatedConversation: Date.now(),
+            todayConversations: statistics[0].todayConversations + 1,
+            onlineConversations: statistics[0].onlineConversations + 1,
+        });     
     }
-    //get se count in session storage
-    sessionStorage.setItem("count", "1");
+    //handle admins counts in conversation
+    if (countOfConnectUsers !== null && countOfConnectUsers === 2) {
+        return redirect("/dashboard");
+    }
+    //change count by one
+    if (countOfConnectUsers !== null) {
+        apiPut(`http://localhost:5000/api/conversations/${room}`, {users: countOfConnectUsers.users + 1});  
+    }
     //get messages from conversation by id
     const data = await apiGet(`http://localhost:5000/api/conversationMessages/${room}`);
     return defer({messages: data});
@@ -61,22 +49,71 @@ export async function loader({ request}) {
 
 export default function ChatPage() {
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    //state for check if user is admin
     const [isAdmin, setIsAdmin] = useState(false);
-    const room = searchParams.get("room")
+    //get id of room from query
+    const [searchParams, setSearchParams] = useSearchParams()
+    const room = searchParams.get("room");
+    //navigate hook
     const navigate = useNavigate();
+    //messages data from loader
     const messagesData = useLoaderData();
+    //messages state
+    const [messages, setMessages] = useState([]);
+    //socket instance
     const [socket, setSocket] = useState();
-   
+    //my swall library
+    const MySwall = withReactContent(Swal);
+    //state for show template
+    const [showTemplate, setShowTemlate] = useState(false);
+    //message state input
     const [messageInput, setMessageInput] = useState("");
+    //chat app state
+    const [chatAppState, setChatAppState] = useState(false);
+    //hook for focus on input
+    const inputRef = useRef(null);
 
-    function sendMessage() {
-        socket.emit("message", {
-            text: messageInput,
-        });
-        createMessage();
+    //function for handle appState
+    function handleChatAppState(value) {
+        setChatAppState(value);
     }
 
+    //function for log-in user
+    async function logIn() {
+        //get user info
+        try {
+            await apiGet("http://localhost:5000/user/login");
+            window.addEventListener("beforeunload", changeUserCountOnLeave)
+            return setIsAdmin(true);
+        } catch(err) {
+            if (err instanceof requestError && err.response.status === 401) {
+                window.addEventListener("beforeunload", changeCountOfOnlineConversations)
+                window.addEventListener("beforeunload", deleteRoom);
+                window.addEventListener("beforeunload", deleteAllMessages); 
+                return setIsAdmin(false);
+            } else {
+                return showServerError(await err.message);
+            }
+        }
+    }
+
+
+    //function for change count of online conversations
+    async function changeCountOfOnlineConversations() {
+        try {
+            const statistics = await apiGet("http://localhost:5000/statistics");  
+            await apiPut("http://localhost:5000/statistics", {
+                onlineConversations: statistics[0].onlineConversations - 1,
+            })
+        } catch(err) {
+            if (err instanceof requestError) {
+                return showServerError(await err.response.text());
+            } else {
+                return showServerError(await err.message);
+            }
+        }
+    }
+    
     //function for delete room
     async function deleteRoom() {
         await apiDelete(`http://localhost:5000/api/conversations/${room}`).catch((err) => {throw err});
@@ -87,90 +124,121 @@ export default function ChatPage() {
         await apiDelete(`http://localhost:5000/api/conversationMessages/${room}`).catch((err) => {throw err})
     }
 
+    //function change user count by -1
+    async function changeUserCountOnLeave() {
+        await apiPut(`http://localhost:5000/api/conversations/${room}`, {users: 1});  
+    }
+
+    //fucntion for remove conversation by admin
+    const cancelConversation = useCallback(() => {
+        changeCountOfOnlineConversations();
+        deleteRoom();
+        deleteAllMessages();
+        socket.emit("cancel-conversation", {
+            text: "Conversation was closed by admin.",
+        });
+    })
+
+    //function for show messages templates
+    const showTemplates = useCallback(() => {
+        setShowTemlate(prevValue => !prevValue);
+    }) 
+
+    //function for handle input state
+    function handleInput(value) {
+        setMessageInput(value);
+    }
+
+    //fucntion for handle show template state
+    function handleShowTemplate(value) {
+        setShowTemlate(value);
+    }
+
     useEffect(() => {
+        //fucntion for check loggin
+        logIn();
         //socket client connect
         const newSocket = io("http://localhost:5000/chat", {
             query: {
                 roomID: room
             }
-        });
+        })
         setSocket(newSocket);
         //delete room and messages on leave chat
-        async function checkIfisAdmin() {
-            try {
-                await apiGet("http://localhost:5000/user/login"); 
-                setIsAdmin(true);   
-            } catch(err) {
-                if (err instanceof requestError && err.response.status === 401) {
-                    window.addEventListener("beforeunload", deleteRoom);
-                    window.addEventListener("beforeunload", deleteAllMessages)
-                    return;
-                } else {
-                    throw err;
-                }
-            }
-            
-        }
-        checkIfisAdmin();
         return () => {
+            //remove event listeners
             if (!isAdmin) {
+                window.removeEventListener("beforeunload", changeCountOfOnlineConversations)
                 window.removeEventListener("beforeunload", deleteRoom);
                 window.removeEventListener("beforeunload", deleteAllMessages) 
-                //remove count from session storage
-                sessionStorage.removeItem("count");   
+            } else if (isAdmin) {
+                window.removeEventListener("beforeunload", changeUserCountOnLeave);
             }
-            redirect("/");
-            newSocket.close()
+            newSocket.close()  
         }
     }, [])
 
-    async function createMessage() {
-        await apiPost("http://localhost:5000/api/conversationMessages", {
-            text: messageInput,
-            id_of_room: room
-        }).catch((err) =>{throw err})
-    }
 
-    //events for sebd messages between socket client and server
+    //events for send messages between socket client and server
     useEffect(() => {
         if (socket == null) return;
         socket.on("message-response", data => {
-            navigate(`/chat?room=${room}`);
+            setMessages(previesArray => [...previesArray, {
+                text: data.text,
+                dateAdded: dateFormater(),
+                senderIsAdmin: data.senderIsAdmin
+            }])
+        })
+        socket.on("cancel-conversation", message => {
+            async function checkAdmin() {
+                try {
+                    await apiGet("http://localhost:5000/user/login");
+                    MySwall.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'The conversation was successfully deleted.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    })
+                    setTimeout(() => {
+                        return window.close();
+                    }, 3000);
+                } catch(err) {
+                    if (err instanceof requestError && err.response.status === 401) {
+                        MySwall.fire({
+                            position: 'center',
+                            icon: "error",
+                            title: 'The conversation was canceled by admin.',
+                        })
+                        return navigate("/");
+                    } else {
+                        return showServerError(await err.message);
+                    }
+                }
+            }
+            checkAdmin();
         })
         return () => {
             socket.off("message-response")
         }   
     }, [socket])
 
-    //output
-    function render(messagesData) {
-        const elements = messagesData.map(data => 
-            <div>
-                <p>{data.text}</p>
-                <p>{data.dateAdded}</p>
-            </div>
-        ) 
-        return (
-           <div>
-                {elements ? elements : null}
-           </div>
-        )
-            
+    //fucntion for handle focus on enter
+    function handleFocus() {
+        inputRef.current.focus()
     }
     
-
     return (
-        <div>
-            <h1>Chat Page</h1>
-            <React.Suspense fallback={<h2>Loading...</h2>}>
-                <Await resolve={messagesData.messages}>
-                    {render}
-                </Await>
-            </React.Suspense>
-            <form>
-                <input type="text" onChange={(e) => setMessageInput(e.target.value)} value={messageInput}></input>
-                <button type="button" onClick={() => sendMessage()}>Poslat zprávu</button>
-            </form>
-        </div>
+        <>
+            <AppIcon handleChatAppState={handleChatAppState}/>
+            <div className={!chatAppState ? "chat-page-container--show" : "chat-page-container--hide"}>
+                <Header heading="Support chat" handleChatAppState={handleChatAppState} logo={false} description={true} />
+                <MessageTemplate showTemplate={showTemplate} handleInput={handleInput} handleShowTemplate={handleShowTemplate} handleFocus={handleFocus}/>
+                <ChatMessages messagesData={messagesData}  messages={messages} isAdmin={isAdmin}/>
+                <ChatForm isAdmin={isAdmin} messageInput={messageInput} socket={socket} handleInput={handleInput} room={room} cancelConversation={cancelConversation} showTemplates={showTemplates} inputRef={inputRef}/>
+            </div>    
+        </>
+        
+        
     )
 }

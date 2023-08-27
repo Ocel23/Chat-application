@@ -62,7 +62,7 @@ const conversationSchema = new mongoose.Schema({
     dateAdded: {
         type: Date,
         default: Date.now
-    }
+    },
 })
 
 const messageSchema = new mongoose.Schema({
@@ -75,13 +75,21 @@ const messageSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    senderIsAdmin: Boolean
 })
 
+const statisticsSchema = new mongoose.Schema({
+    onlineConversations: Number,
+    todayConversations: Number,
+    countOfCreatedConversations: Number,
+    dateOfLastCreatedConversation: Date,
+})
 
 //create models
 const Conversation = mongoose.model("conversation", conversationSchema);
 const User = mongoose.model("user", userSchema);
 const Message = mongoose.model("message", messageSchema);
+const Statistics = mongoose.model("statistics", statisticsSchema)
 
 
 //POST request for conversations
@@ -251,7 +259,7 @@ app.delete("/user/login", (req, res) => {
         if (err) {
             res.status(500).send("There was an error logging out")
         }
-        res.send("User was log out")
+        res.send({message: "You are logged out."});
     })
 })
 
@@ -303,7 +311,9 @@ io.of("/chat").on("connection", socket => {
         socket.on("message", data => {
             io.of("/chat").to(roomID).emit("message-response", data);
         })
-
+        socket.on("cancel-conversation", message => {
+            io.of("chat").to(roomID).emit("cancel-conversation", message);
+        })
         socket.on("disconnect", socket => {
             console.log("User was disconnected");
         })
@@ -320,7 +330,7 @@ app.post("/email/send", (req, res) => {
             user: user,
             clientId: '645479061279-2i9uedbf2ddtkiaro4dqhtf9u3t1436o.apps.googleusercontent.com',
             clientSecret: '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',
-            refreshToken: '1//04BsPsgKj-tGCCgYIARAAGAQSNwF-L9IrOZWMWpxy_wHgzKV7qtJZu0KP83y2T2qW0o2JT0GLDF6hwGchlqmdVeho8z5_dY9qQfo',
+            refreshToken: '1//049wZRvRDGOdlCgYIARAAGAQSNwF-L9IrA7MXGuYzHtbpUU2VhEvszOaNxZRouCK2w4auSc-EYftpR5B4Mpj01SHJT8tMb4h2GrI',
         },
         tls: {
             rejectUnauthorized: false
@@ -343,4 +353,31 @@ app.post("/email/send", (req, res) => {
         }
     })
     
+})
+
+//statistics
+app.get("/statistics", (req, res) => {
+    Statistics.find()
+        .then(statistics => {
+            res.send(statistics);
+        })
+        .catch(() => {
+            res.send("Statistics information could not be loaded");
+        })
+})
+
+app.put("/statistics", (req, res) => {
+    Statistics.findByIdAndUpdate("64e5f9e152633a2a9e4b22f7", req.body)
+        .then(statistics => {
+                res.send(statistics);
+        })
+        .catch(() => res.send("Statistics could not updated"));  
+})
+
+app.post("/statistics", (req, res) => {
+    Statistics.create(req.body)
+        .then(statistics => {
+                res.send(statistics);
+        })
+        .catch(() => res.send("Statistics could not created."));  
 })

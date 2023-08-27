@@ -4,6 +4,14 @@
     padding: 0;
 }
 
+body {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    height: 100vh;
+}
+
 .app {
     border: 0;
+    margin: 50px;
 }

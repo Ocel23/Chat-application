@@ -1,6 +1,11 @@
-import React from "react";
-import { Form, redirect, useActionData } from "react-router-dom";
+import React, { useState } from "react";
+import { Form, redirect, useActionData, useNavigate, useNavigation } from "react-router-dom";
 import { apiPost, requestError } from "../utils/api";
+import SendIcon from "../images/send-icon.svg";
+import CloseIcon from "../images/close-icon.svg";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import showServerError from "../utils/showServerError";
 
 export async function action({ request }) {
     //get data from request object
@@ -11,31 +16,57 @@ export async function action({ request }) {
 
     try {
         //post email
-        const data = await apiPost("http://localhost:5000/email/send", {email, subject, message})
+        await apiPost("http://localhost:5000/email/send", {email, subject, message});
+        const MySwall = withReactContent(Swal);
+        MySwall.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Your email was successfully sended.',
+            showConfirmButton: false,
+            timer: 3000
+        })
         return redirect("/");
     } catch(err) {
         //send error if response was not ok througth request error
         if (err instanceof requestError) {
             return err.response.text()
         }
-        return err.message;
+        else {
+            return err.message;
+        }
     }
     
 }
 
 export default function EmailForm() {
+    
     //get error data from form if was some error
     const errorMessage = useActionData();
+    //navigation hook
+    const navigation = useNavigation();
+    //navigate hook
+    const navigate = useNavigate();
+
+    const [close, setClose] = useState(false);
+
+    //function to navigato to home page
+    function backToHomePage() {
+        setClose(true);
+        setTimeout(() => {
+            navigate("/");
+        }, 300);
+    }
 
     //output
     return (
-        <div>
-            <Form method="post" replace>
-                <input type="email" placeholder="Zadej prosím svůj email..." name="email" />
-                <input type="text" placeholder="Zadej prosím předmět..." name="subject" />
-                <textarea placeholder="Napiš prosím zprávu..." name="message"></textarea>
-                {errorMessage && <span>{errorMessage}</span>}
-                <button>Odeslat</button>
+        <div className="email-form--container">
+            <Form method="post" replace className={close ? "email-form--hide" : "email-form--show"}>
+                <img className="email-form--close-icon" src={CloseIcon} onClick={() => backToHomePage()}></img>
+                <h5 className="email-form--heading">Sorry, but no admin is  online. Send you email and we are going to answer to you later.</h5>
+                <input type="email" placeholder="Email" name="email" className="email-form--input"/>
+                <input type="text" placeholder="Subject" name="subject" className="email-form--input"/>
+                <textarea placeholder="Napiš prosím zprávu..." name="message" className="email-form--textarea"></textarea>
+                <button className="email-form--button" onClick={errorMessage && showServerError(errorMessage)} disabled={navigation.state === "submitting"}>{navigation.state === "submitting" ? "Sending..." : "Send"}<img src={SendIcon} className="email-form--send-icon"></img></button>
             </Form>
         </div>
     )

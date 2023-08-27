@@ -1,0 +1,1 @@
+použít po dovolené useCallback, useMemo, useRef - session
