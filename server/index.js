@@ -304,18 +304,13 @@ app.get("/users/online/:id", (req, res) => {
 io.of("/chat").on("connection", socket => {
         const {roomID} = socket.handshake.query;
         if (roomID) {
-            console.log("User connected with id" + socket.id);
             socket.join(roomID);
-            console.log("User was connected to the room: " + roomID);
         }
         socket.on("message", data => {
             io.of("/chat").to(roomID).emit("message-response", data);
         })
         socket.on("cancel-conversation", message => {
             io.of("chat").to(roomID).emit("cancel-conversation", message);
-        })
-        socket.on("disconnect", socket => {
-            console.log("User was disconnected");
         })
 })
 

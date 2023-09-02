@@ -2,8 +2,10 @@ import React from "react";
 
 export default function Footer() {
     return (
-        <div className="dashboard-footer--container">
-            <h3 className="dashboard-footer--text">copyright @Ocel23</h3>
-        </div>
+        <>
+            <footer className="dashboard-footer--container">
+                <a className="dashboard-footer--text" href="https://github.com/Ocel23">copyright @Ocel23</a>
+            </footer>
+        </>
     )
 }

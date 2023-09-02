@@ -8,15 +8,15 @@ export default function ChatMessages({messagesData, messages, isAdmin}) {
         function render(messagesData) {
         const elements = messagesData.map(message => 
             <div className={decideClassForMessage(message, "chat-message--left", "chat-message--right", "chat-message--left", "chat-message--right")}>
-                <span className={decideClassForMessage(message, "chat-logo--left", "chat-logo--right", "chat-logo--left", "chat-logo--right")}>{decideClassForMessage(message, "I", "A", "I", "U")}</span>
+                <p className={decideClassForMessage(message, "chat-logo--left", "chat-logo--right", "chat-logo--left", "chat-logo--right")}>{decideClassForMessage(message, "I", "A", "I", "U")}</p>
                 <p className={decideClassForMessage(message, "chat--text chat-text--left accent left", "chat--text chat-text--right accent right", "chat--text chat-text--left accent left", "chat--text chat-text--right accent right")}>{message.text}</p>
                 <p className={decideClassForMessage(message, "chat-date--left", "chat-date--right", "chat-date--left", "chat-date--right")}>{dateFormater(message.dateAdded)}</p>
             </div>
         ) 
         return (
-            <div>
+            <>
                 {elements ? elements : <span>None message was found.</span>}
-            </div>
+            </>
         )
                 
         }
@@ -45,7 +45,7 @@ export default function ChatMessages({messagesData, messages, isAdmin}) {
                 {messages.map(message => 
                     <div className={decideClassForMessage(message, "chat-message--left", "chat-message--right", "chat-message--left", "chat-message--right")}>
                         <span className={decideClassForMessage(message, "chat-logo--left", "chat-logo--right", "chat-logo--left", "chat-logo--right")}>{decideClassForMessage(message, "I", "A", "I", "U")}</span>
-                        <p className={decideClassForMessage(message, "chat--text chat-text--left accent left", "chat--text chat-text--right accent right", "chat--text chat-text--left accent left", "chat--text chat-text--right accent right")}>{message.text}</p>
+                        <p className={decideClassForMessage(message, "chat--text chat-text--left primary left", "chat--text chat-text--right accent right", "chat--text chat-text--left primary left", "chat--text chat-text--right accent right")}>{message.text}</p>
                         <p className={decideClassForMessage(message, "chat-date--left", "chat-date--right", "chat-date--left", "chat-date--right")}>{message.dateAdded}</p>
                     </div>
                 )} 

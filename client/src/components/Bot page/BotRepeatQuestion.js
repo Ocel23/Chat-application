@@ -40,7 +40,7 @@ export default function BotMessageRepeat({addMessage, loadingRepeatQuestionState
             <div className="bot-another-option--container">
                 <img src={BotIcon} alt="bot icon" className="bot-icon--question option-icon"></img>    
                 <p className="bot--question accent option">Have you got any question?</p>
-                <div className={isYesActive ? "options p-48" : "options"}>
+                <div className={isYesActive ? "options m-48" : "options"}>
                         <button type="button" onClick={handleYesOption} className={isYesActive ? "bot-option--answer option-yes active-option" : "bot-option--answer option-yes"}>Yes</button>
                         <button type="button" onClick={handleNoOption} className={isNoActive ? "bot-option--answer option-no active-option" : "bot-option--answer option-no"}>No</button>    
                 </div>  

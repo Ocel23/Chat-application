@@ -10,14 +10,15 @@ export default function Statictics({statistics}) {
             <div className="dashboard-statistics-data--container">
                 <p className="dashboard-statistics--data">Online conversations: <span id="dashboard-statistics--data">{statistic.onlineConversations}</span></p>
                 <p className="dashboard-statistics--data">Today conversations: <span id="dashboard-statistics--data">{statistic.todayConversations}</span></p>
-                <p className="dashboard-statistics--data">Count of created...: <span id="dashboard-statistics--data">{statistic.countOfCreatedConversations}</span></p>
-                <p className="dashboard-statistics--data">Date of last created...: <br></br><span id="dashboard-statistics--data">{dateFormater(statistic.dateOfLastCreatedConversation)}</span></p>
+                <p className="dashboard-statistics--data">Count of created conversations: <span id="dashboard-statistics--data">{statistic.countOfCreatedConversations}</span></p>
+                <p className="dashboard-statistics--data">Date of last created conversations: </p>
+                <p className="dashboard-statistics--data">{dateFormater(statistic.dateOfLastCreatedConversation)}</p>
             </div>
         )
         return (
-            <div>
+            <>
                 {statistics.length === 0 ? "No statistics could be found." : elements}
-            </div>
+            </>
         )
     }
 

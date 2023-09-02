@@ -62,13 +62,13 @@ export default function ChatForm({isAdmin, messageInput, socket, handleInput , r
     return (
         <>
             <form className={isAdmin ? "chat-form--container chat-form-container--admin" : "chat-form--container"}>
-                <div className="chat-form-center--container">
+                <div style={{display: "flex"}}>
                     <input type="text" onChange={(e) => handleChange(e)} onKeyDown={handleEnter} value={messageInput} className="chat-form--input" placeholder="Send message..." autoFocus ref={inputRef}></input>
                     <button type="button" onClick={sendMessage} className="chat-form--button"><img src={SendIcon} className="chat-form--img"></img></button>    
                 </div>
                 {isAdmin && 
                 <div className="chat-form-admin-tools--container">
-                    <button type="button" onClick={cancelConversation} className="chat-form-admin-tool--delete">Delete conversation&nbsp;&nbsp;<img src={TrashCan}></img></button>
+                    <button type="button" onClick={cancelConversation} className="chat-form-admin-tool--delete">Delete conversation&nbsp;&nbsp;<img src={TrashCan} className="chat-form-admin--delete-icon"></img></button>
                     <p onClick={showTemplates}>Messages templates</p> 
                 </div>}
             </form>    

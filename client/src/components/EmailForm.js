@@ -63,9 +63,9 @@ export default function EmailForm() {
             <Form method="post" replace className={close ? "email-form--hide" : "email-form--show"}>
                 <img className="email-form--close-icon" src={CloseIcon} onClick={() => backToHomePage()}></img>
                 <h5 className="email-form--heading">Sorry, but no admin is  online. Send you email and we are going to answer to you later.</h5>
-                <input type="email" placeholder="Email" name="email" className="email-form--input"/>
-                <input type="text" placeholder="Subject" name="subject" className="email-form--input"/>
-                <textarea placeholder="Napiš prosím zprávu..." name="message" className="email-form--textarea"></textarea>
+                <input type="email" placeholder="Email" name="email" className="email-form--input" required/>
+                <input type="text" placeholder="Subject" name="subject" className="email-form--input" required/>
+                <textarea placeholder="Napiš prosím zprávu..." name="message" className="email-form--textarea" required></textarea>
                 <button className="email-form--button" onClick={errorMessage && showServerError(errorMessage)} disabled={navigation.state === "submitting"}>{navigation.state === "submitting" ? "Sending..." : "Send"}<img src={SendIcon} className="email-form--send-icon"></img></button>
             </Form>
         </div>

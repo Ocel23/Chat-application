@@ -1,13 +1,17 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiDelete, requestError } from "../utils/api";
+import { apiDelete, apiGet, requestError } from "../utils/api";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import showServerError from "../utils/showServerError";
 
 export default function Navbar({setOffline}) {
 
     //navigate hook
     const navigate = useNavigate();
+
+    //satte for get user data
+    const [userEmail, setUserEmail] = useState();
 
     //function for logout
     const logOut = useCallback(() => {
@@ -37,11 +41,30 @@ export default function Navbar({setOffline}) {
         deleteLog();
     })
 
+    //get user data
+    useEffect(() => {
+        async function getUser() {
+            try {
+                const data = await apiGet("http://localhost:5000/user/login");
+                setUserEmail(data.email);
+            } catch(err) {
+                if (err instanceof requestError) {
+                    showServerError(await err.response.text())    
+                } else {
+                    showServerError(await err.message);
+                }
+            }
+        }
+        getUser();
+    }, [])
+
     //output
     return (
-        <div className="dashboard-navbar--container">
+        <nav className="dashboard-navbar--container">
+            <h3 className="dashboard-navbar--email">{userEmail}</h3>
+            <span className="dashboard-navbar--spacer"></span>
             <h3 className="dashboard-navbar--log-out" onClick={logOut}>Log out</h3>
             <ToastContainer autoClose={2000}/>    
-        </div>
+        </nav>
     )
 }

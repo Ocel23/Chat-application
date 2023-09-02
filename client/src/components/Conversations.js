@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Await } from "react-router-dom";
 import dateFormater from "../utils/dateFormater";
 
@@ -9,14 +9,27 @@ export default function Conversations({conversations}) {
         window.open(`/chat?room=${id}`, "_blank");
     }
 
+    const [count, setCount] = useState([]);
+
+    function countConversations() {
+        const array = [];
+        for (let i = 1; i < conversations.length + 1; i++) {
+            array.push(i);
+        }
+        return setCount(array);
+    }
+
+    useEffect(() => {
+        countConversations();
+    }, [])
 
     //render
     function render(conversations) {
-        const elements = conversations.map(conversation => 
+        const elements = conversations.map((conversation, index) => 
             <div className="dashboard-conversation--container" onClick={() => joinRoom(conversation.id_of_room)} key={conversation._id}>
-                    <p className="dashboard-conversation--count">{conversations.length}</p>
+                    <p className="dashboard-conversation--count"><span className="dashboard-conversation--text">Conversation</span>&nbsp;{count[index]}</p>
                     <p className="dashboard-conversation--date">{dateFormater(conversation.dateAdde)}</p>
-                    <p className="dashboard-conversation--online">{conversation.users}</p>
+                    <p className="dashboard-conversation--online">Online: <span className="dashboard-conversation-online--text">{conversation.users}</span></p>
             </div>
         )
         return (

@@ -14,7 +14,7 @@ export default function Header({heading, handleBotAppState, handleChatAppState ,
     })
 
     return (
-        <div className="navbar--container">
+        <header className="navbar--container">
             <img src={downIcon} alt="hide page dow icon" className="navbar--button-down" onClick={hideApp}></img>
             <img src={resizeIcon} alt="resize button" className="navbar--button-resize"></img>
             <div className={logo ? "navbar--heading" : "navbar-heading--column"}>
@@ -22,6 +22,6 @@ export default function Header({heading, handleBotAppState, handleChatAppState ,
                 <h4 className="navbar--title">{heading}</h4>    
                 {description && <p className="navbar--description">Please wait...  Support will attend to you within minutes.</p>}
             </div>
-        </div>
+        </header>
     )
 }

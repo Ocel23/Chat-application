@@ -218,8 +218,25 @@ export default function ChatPage() {
             }
             checkAdmin();
         })
+
+        //socket erros
+        socket.on("connect_failed", err => {
+            showServerError("Connection failed.");
+            throw err;
+        })
+
+        socket.on("error", err => {
+            showServerError("It was an error on server side.");;
+            throw err;
+        })
+
+        socket.on("reconnect_failed", err => {
+            showServerError("Reconnection failed.");
+            throw err;
+        })
+
         return () => {
-            socket.off("message-response")
+            socket.off("message-response");
         }   
     }, [socket])
 

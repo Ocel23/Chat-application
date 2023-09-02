@@ -30,7 +30,7 @@ export async function loader() {
     }
     handleDeleteTodayConversations();
     //get all conversations
-    const conversations1 =  await apiGet("http://localhost:5000/api/conversations");    
+    const conversations1 =  await apiGet("http://localhost:5000/api/conversations");  
     return defer({conversations : conversations1, statistics: statistics1});
 }
 
@@ -82,10 +82,11 @@ export default function Dashboard() {
     return (
         <div className="dashboard--container">
             <Navbar setOffline={setOffline}/>
-            <Statictics statistics={statistics}/>
-            <Conversations conversations={conversations}/>
+            <div className="dashboard-container--content">
+                <Statictics statistics={statistics}/>
+                <Conversations conversations={conversations}/>    
+            </div>
             <Footer />
-            <p onClick={() => setOffline()}>xd</p>
         </div>
     )
 }

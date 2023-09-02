@@ -54,8 +54,8 @@ export default function Questions({messages, loadingAnswer, handleMessages, mess
                     {messages.map((message => 
                         <BotQuestion message={message} handleClick={handleClick}/>
                     ))}    
-                    <Link to={`chat?room=${nanoid()}`} className="bot--question accent">Dou you want to contact support?</Link>  
-                </div> 
+                    <Link to={`chat?room=${nanoid()}`} className="bot--question accent">Do you want to contact support?</Link>  
+                </div>
             </div>
             }
         </>
