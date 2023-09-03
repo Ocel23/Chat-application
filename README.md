@@ -21,4 +21,8 @@
 <h3>Installation</h3>
 
 <p>Firts you need to install all depensies</p>
-<q>npm i</q>
+
+```
+npm i
+```
+
