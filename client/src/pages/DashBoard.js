@@ -9,6 +9,9 @@ import Footer from "../components/Footer";
 import showServerError from "../utils/showServerError";
 
 export async function loader() {
+
+    //nodejs api adress
+    const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     try {
         //require auth
         await requireAuth();
@@ -16,21 +19,21 @@ export async function loader() {
         throw err;
     }
     //get all statistics data
-    const statistics1 = await apiGet("http://localhost:5000/statistics");
+    const statistics1 = await apiGet(`${API_URL}/statistics`);
     
     //fucntion for handle today conversation value
     async function handleDeleteTodayConversations() {
         const today = new Date();
         const conversationDate = new Date(statistics1[0].dateOfLastCreatedConversation);
         if (conversationDate.getDate() !== today.getDate()) {
-            await apiPut("http://localhost:5000/statistics", {
+            await apiPut(`${API_URL}/statistics`, {
                 todayConversations: 0,
             }); 
         }
     }
     handleDeleteTodayConversations();
     //get all conversations
-    const conversations1 =  await apiGet("http://localhost:5000/api/conversations");  
+    const conversations1 =  await apiGet(`${API_URL}/api/conversations`);  
     return defer({conversations : conversations1, statistics: statistics1});
 }
 
@@ -39,6 +42,8 @@ export async function loader() {
 
 export default function Dashboard() {
 
+    //nodejs api adress
+    const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     //date from loader
     const data = useLoaderData();
     const conversations = data.conversations;
@@ -47,8 +52,8 @@ export default function Dashboard() {
     //status functions
     async function setOffline() {
         try {
-            const userData2 = await apiGet("http://localhost:5000/user/login");
-            await apiPut(`http://localhost:5000/users/online/${userData2._id}`, {isOnline: false});
+            const userData2 = await apiGet(`${API_URL}/user/login`);
+            await apiPut(`${API_URL}/users/online/${userData2._id}`, {isOnline: false});
         } catch(err) {
             if (err instanceof requestError) {
                 return showServerError(await err.response.text())
@@ -60,8 +65,8 @@ export default function Dashboard() {
 
     async function setOnline() {
         try {
-            const userData1 = await apiGet("http://localhost:5000/user/login");
-            await apiPut(`http://localhost:5000/users/online/${userData1._id}`, {isOnline: true})
+            const userData1 = await apiGet(`${API_URL}/user/login`);
+            await apiPut(`${API_URL}/users/online/${userData1._id}`, {isOnline: true})
         } catch(err) {
             if (err instanceof requestError) {
                 return showServerError(await err.response.text())

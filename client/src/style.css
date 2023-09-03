@@ -204,6 +204,7 @@
     grid-column: 3;
     margin-right: 1em;
     margin-top: 1em;
+    cursor: pointer;
 }
 
 .navbar--button-resize {
@@ -214,6 +215,7 @@
     grid-column: 1;
     margin-left: 1em;
     margin-top: 1em;
+    cursor: pointer;
 }
 
 .navbar--description {
@@ -290,6 +292,7 @@
     text-decoration: none;
     text-align: center;
     word-wrap: break-word;
+    cursor: pointer;
 }
 
 .m-16 {
@@ -302,6 +305,7 @@
 
 .active {
     background-color: var(--primary-color);
+    transition: 0.1s;
 }
 
 .accent  {
@@ -354,6 +358,7 @@
     text-align: center;
     animation: show ease-in-out 0.3s 1;
     transform-origin: right;
+    cursor: pointer;
 }
 
 .option-icon {
@@ -369,6 +374,7 @@
     background-color: var(--primary-color);
     color: var(--secondary-color);
     border: 0;
+    transition: 0.1s;
 }
 
 .options {
@@ -509,6 +515,7 @@
     clip-path: circle(35px at center);
     height: 72px;
     width: 72px;
+    cursor: pointer;
 }
 
 .app-icon--image {
@@ -620,6 +627,7 @@ input:focus, textarea:focus {
     color: var(--secondary-color);
     border: 0;
     margin-bottom: 2em;
+    cursor: pointer;
 }
 
 .email-form--close-icon {
@@ -711,6 +719,7 @@ input:focus, textarea:focus {
     border-top-right-radius: 10px;
     padding-right: 1.5em;
     border-bottom-right-radius: 10px;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 492px) {
@@ -857,6 +866,7 @@ input:focus, textarea:focus {
     margin-right: 2.25em;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 548px) {
@@ -900,6 +910,7 @@ input:focus, textarea:focus {
     font-size: var(--h4-font-size-small);
     font-weight: 500;
     margin-right: 2.25em;
+    cursor: pointer;
 }
 
 .dashboard-navbar--email, .dashboard-navbar--spacer {
@@ -953,6 +964,7 @@ input:focus, textarea:focus {
     justify-content: center;
     align-items: center;
     margin-bottom: 4.5em;
+    cursor: pointer;
 }
 
 .dashboard-conversation--text {
@@ -993,6 +1005,7 @@ input:focus, textarea:focus {
 .dashboard--no-conversation{
     color: var(--primary-color);
     font-size: var(--h4-font-size-small);
+    text-align: center;
     padding: 4.5em 1em 4.5em 1em;
     border: 2px solid var(--primary-color);
     border-radius: 10px;
@@ -1075,6 +1088,7 @@ input:focus, textarea:focus {
     color: var(--secondary-color);
     margin-top: 1.5em;
     border: 0;
+    cursor: pointer;
 }
 
 .log-in--input:first-child {

@@ -6,8 +6,12 @@ import CloseIcon from "../images/close-icon.svg";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import showServerError from "../utils/showServerError";
+import { config } from "../config";
 
 export async function action({ request }) {
+
+    //nodejs api adress
+    const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     //get data from request object
     const formData = await request.formData();
     const email = formData.get("email");
@@ -16,7 +20,7 @@ export async function action({ request }) {
 
     try {
         //post email
-        await apiPost("http://localhost:5000/email/send", {email, subject, message});
+        await apiPost(`${API_URL}/email/send`, {email, subject, message});
         const MySwall = withReactContent(Swal);
         MySwall.fire({
             position: 'center',
@@ -62,11 +66,11 @@ export default function EmailForm() {
         <div className="email-form--container">
             <Form method="post" replace className={close ? "email-form--hide" : "email-form--show"}>
                 <img className="email-form--close-icon" src={CloseIcon} onClick={() => backToHomePage()}></img>
-                <h5 className="email-form--heading">Sorry, but no admin is  online. Send you email and we are going to answer to you later.</h5>
-                <input type="email" placeholder="Email" name="email" className="email-form--input" required/>
-                <input type="text" placeholder="Subject" name="subject" className="email-form--input" required/>
-                <textarea placeholder="Napiš prosím zprávu..." name="message" className="email-form--textarea" required></textarea>
-                <button className="email-form--button" onClick={errorMessage && showServerError(errorMessage)} disabled={navigation.state === "submitting"}>{navigation.state === "submitting" ? "Sending..." : "Send"}<img src={SendIcon} className="email-form--send-icon"></img></button>
+                <h5 className="email-form--heading">{config.emailPage.title}</h5>
+                <input type="email" placeholder={config.emailPage.emailPlaceholder} name="email" className="email-form--input" required/>
+                <input type="text" placeholder="Subject" name={config.emailPage.subjectPlaceholder} className="email-form--input" required/>
+                <textarea placeholder={config.emailPage.messagePlaceholder} name="message" className="email-form--textarea" required></textarea>
+                <button className="email-form--button" onClick={errorMessage && showServerError(errorMessage)} disabled={navigation.state === "submitting"}>{navigation.state === "submitting" ? config.emailPage.buttonSendingText : config.emailPage.buttonSendText}<img src={SendIcon} className="email-form--send-icon"></img></button>
             </Form>
         </div>
     )

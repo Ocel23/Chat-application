@@ -1,10 +1,21 @@
+import { config } from "../config";
+
 export default function dateFormater(date) {
+
     if (date) {
         const today = new Date(date);
-        let formatedDate = `${today.getDate()}.${today.getMonth() + 1} in ${today.getHours()}:${today.getMinutes()}`;
+        let formatedDate = `${config.chatPage.dateFormat}`;
+        formatedDate = formatedDate.replace("%hours%", today.getHours());
+        formatedDate = formatedDate.replace("%minutes%", today.getMinutes());
+        formatedDate = formatedDate.replace("%month%", today.getMonth() + 1);
+        formatedDate = formatedDate.replace("%day%", today.getDate());
         return formatedDate;
     }
     const today = new Date();
-    let formatedDate = `${today.getDate()}.${today.getMonth() + 1} in ${today.getHours()}:${today.getMinutes()}`;
+    let formatedDate = `${config.chatPage.dateFormat}`;
+    formatedDate = formatedDate.replace("%hours%", today.getHours());
+    formatedDate = formatedDate.replace("%minutes%", today.getMinutes());
+    formatedDate = formatedDate.replace("%month%", today.getMonth() + 1);
+    formatedDate = formatedDate.replace("%day%", today.getDate());
     return formatedDate;
 }

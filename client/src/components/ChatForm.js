@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import SendIcon from "../images/chat-send-icon.svg";
 import TrashCan from "../images/trash-can.svg";
 import { apiPost, requestError } from "../utils/api";
 import showServerError from "../utils/showServerError";
 import { useNavigate } from "react-router-dom";
+import { config } from "../config";
 
 export default function ChatForm({isAdmin, messageInput, socket, handleInput , room, cancelConversation, showTemplates, inputRef}) {
     //hook for navigate user to another page
@@ -11,7 +12,7 @@ export default function ChatForm({isAdmin, messageInput, socket, handleInput , r
 
     const [message, setMessage] = useState("");
 
-    const sendMessage = useCallback(() => {
+    const sendMessage = () => {
         //check input message
         if (messageInput === "") {
             return;
@@ -22,7 +23,7 @@ export default function ChatForm({isAdmin, messageInput, socket, handleInput , r
         });
         handleInput("");
         createMessage();
-    })
+    }
 
     //function for create message
     async function createMessage() {
@@ -63,13 +64,13 @@ export default function ChatForm({isAdmin, messageInput, socket, handleInput , r
         <>
             <form className={isAdmin ? "chat-form--container chat-form-container--admin" : "chat-form--container"}>
                 <div style={{display: "flex"}}>
-                    <input type="text" onChange={(e) => handleChange(e)} onKeyDown={handleEnter} value={messageInput} className="chat-form--input" placeholder="Send message..." autoFocus ref={inputRef}></input>
+                    <input type="text" onChange={(e) => handleChange(e)} onKeyDown={handleEnter} value={messageInput} className="chat-form--input" placeholder={config.chatPage.inputPlacelholder} autoFocus ref={inputRef}></input>
                     <button type="button" onClick={sendMessage} className="chat-form--button"><img src={SendIcon} className="chat-form--img"></img></button>    
                 </div>
                 {isAdmin && 
                 <div className="chat-form-admin-tools--container">
                     <button type="button" onClick={cancelConversation} className="chat-form-admin-tool--delete">Delete conversation&nbsp;&nbsp;<img src={TrashCan} className="chat-form-admin--delete-icon"></img></button>
-                    <p onClick={showTemplates}>Messages templates</p> 
+                    <p onClick={showTemplates} style={{cursor: "pointer"}}>Messages templates</p> 
                 </div>}
             </form>    
         </>

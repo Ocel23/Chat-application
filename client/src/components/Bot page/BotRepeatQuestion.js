@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import BotIcon from "../../images/icon.png";
 import BotEndMessage from "./BotEndMessage";
 import Loader from "./Loader";
+import { config } from "../../config";
 
 export default function BotMessageRepeat({addMessage, loadingRepeatQuestionState, loadingAnswerState}) {
 
@@ -13,18 +14,18 @@ export default function BotMessageRepeat({addMessage, loadingRepeatQuestionState
     const [loading, setLoading] = useState(false);
 
     //function for handle yes option
-    const handleYesOption = useCallback(() => {
+    const handleYesOption = () => {
         if (isYesActive || isNoActive) return;
         addMessage();
         setIsYesActive(true);
-    }) 
+    }
 
     //function for handle no option
-    const handleNoOption = useCallback(() => {
+    const handleNoOption = () => {
         if (isYesActive || isNoActive) return;
         setIsNoActive(true);
         loadingEndMessage();
-    })
+    }
         
     //function for loading end message
     function loadingEndMessage() {
@@ -39,10 +40,10 @@ export default function BotMessageRepeat({addMessage, loadingRepeatQuestionState
             {!loadingRepeatQuestionState && !loadingAnswerState ?
             <div className="bot-another-option--container">
                 <img src={BotIcon} alt="bot icon" className="bot-icon--question option-icon"></img>    
-                <p className="bot--question accent option">Have you got any question?</p>
+                <p className="bot--question accent option">{config.botPage.repeatQuestionText}</p>
                 <div className={isYesActive ? "options m-48" : "options"}>
-                        <button type="button" onClick={handleYesOption} className={isYesActive ? "bot-option--answer option-yes active-option" : "bot-option--answer option-yes"}>Yes</button>
-                        <button type="button" onClick={handleNoOption} className={isNoActive ? "bot-option--answer option-no active-option" : "bot-option--answer option-no"}>No</button>    
+                        <button type="button" onClick={handleYesOption} className={isYesActive ? "bot-option--answer option-yes active-option" : "bot-option--answer option-yes"}>{config.botPage.repeatQuestionYesText}</button>
+                        <button type="button" onClick={handleNoOption} className={isNoActive ? "bot-option--answer option-no active-option" : "bot-option--answer option-no"}>{config.botPage.repeatQuestionNoText}</button>    
                 </div>  
             </div>
             : null}

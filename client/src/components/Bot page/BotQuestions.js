@@ -51,8 +51,8 @@ export default function Questions({messages, loadingAnswer, handleMessages, mess
             <div className="bot-questions--container">
                 <img src={BotIcon} alt="bot icon" className="bot-icon--question right"></img>
                 <div className="bot-question-options--container">
-                    {messages.map((message => 
-                        <BotQuestion message={message} handleClick={handleClick}/>
+                    {messages.map(((message, index) => 
+                        <BotQuestion message={message} handleClick={handleClick} key={index}/>
                     ))}    
                     <Link to={`chat?room=${nanoid()}`} className="bot--question accent">Do you want to contact support?</Link>  
                 </div>

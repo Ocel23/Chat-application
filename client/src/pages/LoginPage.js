@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Form, redirect, useActionData, useNavigate, useNavigation } from "react-router-dom";
 import { apiPost, requestError, apiGet, } from "../utils/api";
 import Swal from 'sweetalert2';
@@ -6,6 +6,9 @@ import withReactContent from 'sweetalert2-react-content';
 import showServerError from "../utils/showServerError";
 
 export async function action({ request }) {
+
+    //nodejs api address
+    const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     //get data from request object
     const formData = await request.formData();
     const email = formData.get("email");
@@ -13,7 +16,7 @@ export async function action({ request }) {
 
     try {
         //post login, if not login then redirect to dashboard
-        await apiPost("http://localhost:5000/user/login", {email, password});
+        await apiPost(`${API_URL}/user/login`, {email, password});
         const MySwall = withReactContent(Swal);
         MySwall.fire({
             icon: "success",
@@ -41,12 +44,14 @@ export default function LoginPage() {
     const navigate = useNavigate();
     //maswall library
     const MySwall = withReactContent(Swal);
+    //nodejs api address
+    const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
 
     useEffect(() => {
         //function for log-in
         async function logIn() {
             try {
-                await apiGet("http://localhost:5000/user/login");
+                await apiGet(`${API_URL}/user/login`);
                 return navigate("/dashboard");
             } catch(err) {
                 if (err instanceof requestError && err.response.status === 401) {
@@ -59,7 +64,7 @@ export default function LoginPage() {
         logIn();
     }, [])
 
-    const showError = useCallback(() => {
+    const showError = () => {
         if (errorMessage) {
             MySwall.fire({
                 icon: 'error',
@@ -67,7 +72,7 @@ export default function LoginPage() {
                 text: errorMessage,
             });    
         }
-    })
+    }
         
     //output
     return (

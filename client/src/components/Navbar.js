@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiDelete, apiGet, requestError } from "../utils/api";
 import { ToastContainer, toast } from 'react-toastify';
@@ -14,7 +14,7 @@ export default function Navbar({setOffline}) {
     const [userEmail, setUserEmail] = useState();
 
     //function for logout
-    const logOut = useCallback(() => {
+    const logOut = () => {
         async function deleteLog() {
             setOffline();
             try {
@@ -39,7 +39,7 @@ export default function Navbar({setOffline}) {
             
         };
         deleteLog();
-    })
+    }
 
     //get user data
     useEffect(() => {

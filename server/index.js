@@ -2,13 +2,15 @@ const express = require("express");
 const expressSession= require("express-session");
 const nodemailer = require("nodemailer");
 const app = express();
+//env data
+require("dotenv").config();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: ["http://localhost:3000"],
+        origin: [process.env.NODEJS_HOST_ADRESS],
     },
 });
-const port = 5000;
+
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 //add libraries
@@ -37,12 +39,12 @@ const requireAuth = (req, res, next) => {
 }
 
 //connect to db
-mongoose.connect('mongodb://127.0.0.1:27017/chatapp', { useNewUrlParser: true })
+mongoose.connect(process.env.MONGO_DB_ADRESS, { useNewUrlParser: true })
     .then(console.log("Connected to database."))
     .catch((err) => console.log("Cannot connected to database. " + err))
 
-server.listen(port, () => {
-    console.log("Listening on port " + port)
+server.listen(process.env.PORT_OF_SERVER, () => {
+    console.log("Listening on port " + process.env.PORT_OF_SERVER)
 })
 
 //create schemas for documents in collection
@@ -270,7 +272,7 @@ app.get("/users/online", (req, res) => {
             res.send(user);
         })
         .catch(() => {
-            res.status(404).send("No admin is not online");
+            res.status(404).send("No admin is online");
         })
 })
 
@@ -319,17 +321,30 @@ app.post("/email/send", (req, res) => {
     const {email, subject, message} = req.body;
     const user = "ocel23dev@gmail.com";
     const transporter = nodemailer.createTransport({
+        pool: Boolean(process.env.EMAIL_POOL),
+        host: process.env.EMAIL_HOST_ADRESS,
+        port: parseInt(process.env.EMAIL_HOST_PORT),
+        secure: Boolean(process.env.EMAIL_HOST_SECURE),
+        auth: {
+            user: process.env.EMAIL_AUTH_USERNAME,
+            pass: process.env.EMAIL_AUTH_PASSWORD
+        },
+        tls: {
+            rejectUnauthorized: process.env.TLS_REJECT
+        }
+        /*
         service: "gmail",
         auth: {
             type: 'OAuth2',
             user: user,
             clientId: '645479061279-2i9uedbf2ddtkiaro4dqhtf9u3t1436o.apps.googleusercontent.com',
             clientSecret: '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',
-            refreshToken: '1//049wZRvRDGOdlCgYIARAAGAQSNwF-L9IrA7MXGuYzHtbpUU2VhEvszOaNxZRouCK2w4auSc-EYftpR5B4Mpj01SHJT8tMb4h2GrI',
+            refreshToken: '1//046fjvVICEjIDCgYIARAAGAQSNwF-L9IrsyDA5uhxZjFkvaGrBXTp17wM2KEh4nS84lyyjzkr5_553RMkJfCOGDrtsbs-Sh-4Mog',
         },
         tls: {
             rejectUnauthorized: false
         }
+        */
     })
     
     const mailOptions = {

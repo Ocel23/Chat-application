@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { defer, redirect, useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { apiPost, apiDelete, apiGet , requestError, apiPut } from "../utils/api";
 import io from "socket.io-client";
@@ -11,23 +11,26 @@ import ChatMessages from "../components/ChatMessages";
 import ChatForm from "../components/ChatForm";
 import AppIcon from "../components/AppIcon";
 import showServerError from "../utils/showServerError";
+import { config } from "../config";
 
 export async function loader({ request}) {
 
+    //nodejs api address
+    const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     //get id of room from query
     const room = new URL(request.url).searchParams.get("room");
     //get online users for count, if nobody is online then redirect to email page
-    await apiGet("http://localhost:5000/users/online").catch(() => {throw redirect("/email")});
+    await apiGet(`${API_URL}/users/online`).catch(() => {throw redirect("/email")});
     //get count of connected user to select room
-    const countOfConnectUsers = await apiGet(`http://localhost:5000/api/conversations/${room}`);
+    const countOfConnectUsers = await apiGet(`${API_URL}/api/conversations/${room}`);
     if (countOfConnectUsers == null) {
         //create conversation
-        await apiPost("http://localhost:5000/api/conversations", {
+        await apiPost(`${API_URL}/api/conversations`, {
             id_of_room: room,
             users: 1
         });
-        const statistics = await apiGet("http://localhost:5000/statistics");   
-        await apiPut("http://localhost:5000/statistics", {
+        const statistics = await apiGet(`${API_URL}/statistics`);   
+        await apiPut(`${API_URL}/statistics`, {
             countOfCreatedConversations: statistics[0].countOfCreatedConversations + 1,
             dateOfLastCreatedConversation: Date.now(),
             todayConversations: statistics[0].todayConversations + 1,
@@ -40,10 +43,10 @@ export async function loader({ request}) {
     }
     //change count by one
     if (countOfConnectUsers !== null) {
-        apiPut(`http://localhost:5000/api/conversations/${room}`, {users: countOfConnectUsers.users + 1});  
+        apiPut(`${API_URL}/api/conversations/${room}`, {users: countOfConnectUsers.users + 1});  
     }
     //get messages from conversation by id
-    const data = await apiGet(`http://localhost:5000/api/conversationMessages/${room}`);
+    const data = await apiGet(`${API_URL}/api/conversationMessages/${room}`);
     return defer({messages: data});
 }
 
@@ -54,6 +57,8 @@ export default function ChatPage() {
     //get id of room from query
     const [searchParams, setSearchParams] = useSearchParams()
     const room = searchParams.get("room");
+    //nodejs api address
+    const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     //navigate hook
     const navigate = useNavigate();
     //messages data from loader
@@ -72,6 +77,8 @@ export default function ChatPage() {
     const [chatAppState, setChatAppState] = useState(false);
     //hook for focus on input
     const inputRef = useRef(null);
+    //resize state
+    const [resize, setResize] = useState(false);
 
     //function for handle appState
     function handleChatAppState(value) {
@@ -82,7 +89,7 @@ export default function ChatPage() {
     async function logIn() {
         //get user info
         try {
-            await apiGet("http://localhost:5000/user/login");
+            await apiGet(`${API_URL}/user/login`);
             window.addEventListener("beforeunload", changeUserCountOnLeave)
             return setIsAdmin(true);
         } catch(err) {
@@ -101,8 +108,8 @@ export default function ChatPage() {
     //function for change count of online conversations
     async function changeCountOfOnlineConversations() {
         try {
-            const statistics = await apiGet("http://localhost:5000/statistics");  
-            await apiPut("http://localhost:5000/statistics", {
+            const statistics = await apiGet(`${API_URL}/statistics`);  
+            await apiPut(`${API_URL}/statistics`, {
                 onlineConversations: statistics[0].onlineConversations - 1,
             })
         } catch(err) {
@@ -116,33 +123,33 @@ export default function ChatPage() {
     
     //function for delete room
     async function deleteRoom() {
-        await apiDelete(`http://localhost:5000/api/conversations/${room}`).catch((err) => {throw err});
+        await apiDelete(`${API_URL}/api/conversations/${room}`).catch((err) => {throw err});
     }
 
     //function for delete all messages in conversation
     async function deleteAllMessages() {
-        await apiDelete(`http://localhost:5000/api/conversationMessages/${room}`).catch((err) => {throw err})
+        await apiDelete(`${API_URL}/api/conversationMessages/${room}`).catch((err) => {throw err})
     }
 
     //function change user count by -1
     async function changeUserCountOnLeave() {
-        await apiPut(`http://localhost:5000/api/conversations/${room}`, {users: 1});  
+        await apiPut(`${API_URL}/api/conversations/${room}`, {users: 1});  
     }
 
     //fucntion for remove conversation by admin
-    const cancelConversation = useCallback(() => {
+    const cancelConversation = () => {
         changeCountOfOnlineConversations();
         deleteRoom();
         deleteAllMessages();
         socket.emit("cancel-conversation", {
             text: "Conversation was closed by admin.",
         });
-    })
+    }
 
     //function for show messages templates
-    const showTemplates = useCallback(() => {
+    const showTemplates = () => {
         setShowTemlate(prevValue => !prevValue);
-    }) 
+    }
 
     //function for handle input state
     function handleInput(value) {
@@ -158,7 +165,7 @@ export default function ChatPage() {
         //fucntion for check loggin
         logIn();
         //socket client connect
-        const newSocket = io("http://localhost:5000/chat", {
+        const newSocket = io(`${API_URL}/chat`, {
             query: {
                 roomID: room
             }
@@ -192,7 +199,7 @@ export default function ChatPage() {
         socket.on("cancel-conversation", message => {
             async function checkAdmin() {
                 try {
-                    await apiGet("http://localhost:5000/user/login");
+                    await apiGet(`${API_URL}/user/login`);
                     MySwall.fire({
                         position: 'center',
                         icon: 'success',
@@ -244,12 +251,26 @@ export default function ChatPage() {
     function handleFocus() {
         inputRef.current.focus()
     }
+
+    //handle resize
+    function handleResize(value) {
+        setResize(value);
+    }
+
+    //resize container
+    let style;
+    if(resize && window.innerWidth >= 1200) {
+        style = {
+            width: "750px",
+            height: "90%"
+        }
+    }
     
     return (
         <>
             <AppIcon handleChatAppState={handleChatAppState}/>
-            <div className={!chatAppState ? "chat-page-container--show" : "chat-page-container--hide"}>
-                <Header heading="Support chat" handleChatAppState={handleChatAppState} logo={false} description={true} />
+            <div className={!chatAppState ? "chat-page-container--show" : "chat-page-container--hide"} style={style}>
+                <Header heading={config.chatPage.title} handleChatAppState={handleChatAppState} logo={false} description={true} handleResize={handleResize}/>
                 <MessageTemplate showTemplate={showTemplate} handleInput={handleInput} handleShowTemplate={handleShowTemplate} handleFocus={handleFocus}/>
                 <ChatMessages messagesData={messagesData}  messages={messages} isAdmin={isAdmin}/>
                 <ChatForm isAdmin={isAdmin} messageInput={messageInput} socket={socket} handleInput={handleInput} room={room} cancelConversation={cancelConversation} showTemplates={showTemplates} inputRef={inputRef}/>
