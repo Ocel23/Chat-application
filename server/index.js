@@ -7,7 +7,7 @@ require("dotenv").config();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: [process.env.NODEJS_HOST_ADRESS],
+        origin: [process.env.NODEJS_HOST_DEPLOY_ADDRESS],
     },
 });
 
