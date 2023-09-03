@@ -9,3 +9,9 @@
 > <strong>The code cannot be further modified without the consent of the owner.</strong> Only config.js and env files.<br>
 
 <p>If you have any questions, feel free to write to my email or discord. I wish you a great use :yum:.</p>
+
+<h3>Installation</h3>
+
+<ol>
+    <li>First you upload the Client and Server to your hosting services</li>
+</ol>
