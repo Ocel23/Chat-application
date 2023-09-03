@@ -18,11 +18,10 @@
     <li>Adjust the config for your needs.</li>
     <li>Lets go to installation!<li>
 </ol>
+
 <h3>Installation</h3>
 
 <p>Firts you need to install all depensies</p>
 
-```
-npm i
-```
+`npm i`
 
