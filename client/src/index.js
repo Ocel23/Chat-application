@@ -14,7 +14,9 @@ import "./style.css";
 import NotFound from './pages/NotFound';
 import Error from './components/Error';
 import BotPage from './pages/BotPage';
+import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 
+if (process.env.NODE_ENV === "production") disableReactDevTools();
 
 const router = createBrowserRouter(createRoutesFromElements(
     <Route path='/'>

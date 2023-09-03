@@ -13,5 +13,5 @@
 <h3>Installation</h3>
 
 <ol>
-    <li>First you upload the Client and Server to your hosting services</li>
+    <li>First you upload the Client and Server to your hosting services.</li>
 </ol>
