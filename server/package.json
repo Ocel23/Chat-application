@@ -10,12 +10,14 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "~5.1.0",
+    "chalk-v2": "^1.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "~4.18.1",
     "express-session": "~1.17.3",
     "mongoose": "~6.6.0",
     "nodemailer": "^6.9.3",
-    "socket.io": "^4.6.2"
+    "socket.io": "^4.6.2",
+    "yargs": "^17.7.2"
   }
 }

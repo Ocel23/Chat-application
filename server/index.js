@@ -1,6 +1,7 @@
 const express = require("express");
 const expressSession= require("express-session");
 const nodemailer = require("nodemailer");
+const chalk = require("chalk-v2");
 const app = express();
 //env data
 require("dotenv").config();
@@ -40,11 +41,11 @@ const requireAuth = (req, res, next) => {
 
 //connect to db
 mongoose.connect(process.env.MONGO_DB_ADRESS, { useNewUrlParser: true })
-    .then(console.log("Connected to database."))
-    .catch((err) => console.log("Cannot connected to database. " + err))
+    .then(console.log(chalk.green("Connected to database.")))
+    .catch((err) => console.log(chalk.red("Cannot connected to database. ") + err))
 
 server.listen(process.env.PORT_OF_SERVER, () => {
-    console.log("Listening on port " + process.env.PORT_OF_SERVER)
+    console.log(chalk.yellow("Listening on port ") + process.env.PORT_OF_SERVER)
 })
 
 //create schemas for documents in collection
@@ -199,14 +200,13 @@ app.delete("/api/conversationMessages", (req, res) => {
 
 //POST požadavek registraci
 app.post("/user/register", (req, res) => {
-   User.findOne().where("isAdmin").equals(true)
-            const userData = req.body;
-            const saltRounds = 10;
+        const userData = req.body;
+        const saltRounds = 10;
 
-            const createdUser = {
-                email: userData.email,
-                passwordHash: bcrypt.hashSync(userData.password, saltRounds),
-                isOnline: false
+        const createdUser = {
+            email: userData.email,
+            passwordHash: bcrypt.hashSync(userData.password, saltRounds),
+            isOnline: false
         }
         User.create(createdUser)
             .then(savedUser => {
@@ -378,3 +378,56 @@ app.post("/statistics", (req, res) => {
         })
         .catch(() => res.send("Statistics could not created."));  
 })
+
+//yargs
+
+async function fetchData(url, requestOptions) {
+    const allRequestOptions = {credentials: "include", ...requestOptions};
+    try {
+        const data = await fetch(url, allRequestOptions)
+        if (!data.ok) {
+            throw new requestError(data);
+        }
+        return data.json();
+    } catch(err) {
+        throw err;
+    }
+}
+
+function apiPost(url, data) {
+    const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    };
+
+    return fetchData(url, requestOptions)
+}
+
+const yargs = require("yargs");
+
+yargs.command("register", "register admin to db", (yargs) => {
+    yargs.positional("email", {
+        describe: "email of user",
+        type: "string"
+    }),
+    yargs.positional("password", {
+        describe: "password of user",
+        type: "string"
+    })
+    }, (argv) => {
+        async function registerAdmin() {
+            try {
+                await apiPost(`${process.env.NODEJS_BE_ADDRESS}/user/register`, {
+                    email: argv.email,
+                    password: argv.password
+                });
+                console.log(chalk.green("User successfully created."));
+            } catch (err) {
+                return console.log(err);
+            }
+        }
+        registerAdmin();
+    }).argv;
+
+

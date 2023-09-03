@@ -10,8 +10,18 @@
 
 <p>If you have any questions, feel free to write to my email or discord. I wish you a great use :yum:.</p>
 
-<h3>Installation</h3>
+<h3>Process</h3>
 
 <ol>
-    <li>First you upload the Client and Server to your hosting services.</li>
+    <li>Upload the Client and Server to your hosting services.</li>
+    <li>Setup .env files variables</li>
+    <li>Adjust the config for your needs.</li>
+    <li>Lets go to installation!<li>
 </ol>
+
+<h3>Installation</h3>
+
+<p>Firts you need to install all depensies</p>
+```
+npm i
+```
