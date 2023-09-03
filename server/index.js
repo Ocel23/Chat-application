@@ -319,7 +319,7 @@ io.of("/chat").on("connection", socket => {
 //email
 app.post("/email/send", (req, res) => {
     const {email, subject, message} = req.body;
-    const user = "ocel23dev@gmail.com";
+    const user = process.env.USER_EMAIL_ADDRESS;
     const transporter = nodemailer.createTransport({
         pool: Boolean(process.env.EMAIL_POOL),
         host: process.env.EMAIL_HOST_ADRESS,
@@ -332,19 +332,6 @@ app.post("/email/send", (req, res) => {
         tls: {
             rejectUnauthorized: process.env.TLS_REJECT
         }
-        /*
-        service: "gmail",
-        auth: {
-            type: 'OAuth2',
-            user: user,
-            clientId: '645479061279-2i9uedbf2ddtkiaro4dqhtf9u3t1436o.apps.googleusercontent.com',
-            clientSecret: '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',
-            refreshToken: '1//046fjvVICEjIDCgYIARAAGAQSNwF-L9IrsyDA5uhxZjFkvaGrBXTp17wM2KEh4nS84lyyjzkr5_553RMkJfCOGDrtsbs-Sh-4Mog',
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-        */
     })
     
     const mailOptions = {
