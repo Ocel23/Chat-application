@@ -98,17 +98,18 @@ node index.js register --email <your email> --password <your password>
 
 <p>Then you must create class for this tag with this properties</p>
 
+<details>
+    <summary>Example</summary>
 
-
-    <h6>Html</h6>
+    ###### Html
 
     ```
         <iframe src="http://localhost:3000" class="app"></iframe>  
     ```
 
-    <h6>CSS</h6>
+    ###### CSS
 
-    ```CSS
+    ```
         .app {
             border: 0;
             position: fixed;
@@ -116,7 +117,7 @@ node index.js register --email <your email> --password <your password>
             height: 100%;
         }
     ```
-
-
+    
+</details>
 
 
