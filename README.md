@@ -45,7 +45,7 @@
 
 <h3>3. Adjust the config for your needs</h3>
 
-<emded src="https://github.com/Ocel23/Chat-aplication/blob/afdde493988d892569c285397a91212f2adc2cc6/client/src/config.js"></embed>
+<a href="https://github.com/Ocel23/Chat-aplication/blob/7e0f2ef98ec93545ad9f0e986849457224bc9480/client/src/config.js">Config preview</a>
 
 <h3>4. Installation</h3>
 
