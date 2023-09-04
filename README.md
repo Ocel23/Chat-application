@@ -48,20 +48,19 @@
 <details>
     <summary>Config code</summary>
     ```ruby
-        export const config = {
     botPage: {
-        questionsWithAnswers: [
-            {
-                "Which languages was used to development this app?": "HTML, CSS, JavaScript",
-                "Who is programmer of this app?" : "Ocel23",
-            },
-            
-        ],
-        title: "Ocel bot | Team chat app",
-        repeatQuestionText: "Have you got any question?",
-        repeatQuestionYesText: "Yes",
-        repeatQuestionNoText: "No",
-        endMessageText: "Thank you that you used our bot. Have a nice day!",
+    questionsWithAnswers: [
+        {
+            "Which languages was used to development this app?": "HTML, CSS, JavaScript",
+            "Who is programmer of this app?" : "Ocel23",
+        },
+        
+    ],
+    title: "Ocel bot | Team chat app",
+    repeatQuestionText: "Have you got any question?",
+    repeatQuestionYesText: "Yes",
+    repeatQuestionNoText: "No",
+    endMessageText: "Thank you that you used our bot. Have a nice day!",
     },
     chatPage: {
         title: "Support",
@@ -79,8 +78,6 @@
         buttonSendText: "Send",
         buttonSendingText: "Sending...",
     }
-}
-
     ```
 </details>
 
