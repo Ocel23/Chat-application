@@ -24,7 +24,7 @@
 
 ### 2. Setup .env files variables
 
-<h5>List of used variables for client<h5>
+##### List of used variables for client
 
 + REACT_APP_NODEJS_ADDRESS
 
