@@ -102,8 +102,13 @@ node index.js register --email <your email> --password <your password>
     <summary>Example</summary>
     <div>
     <h6>Html</h6>
-    ``` <iframe src="http://localhost:3000" class="app"></iframe> ``` 
+
+    ``` 
+    <iframe src="http://localhost:3000" class="app"></iframe>
+    ```
+      
     <h6>Html</h6> 
+
     ```
         .app {
             border: 0;
@@ -112,6 +117,7 @@ node index.js register --email <your email> --password <your password>
             height: 100%;
         }
     ```
+
     </div>
     
 </details>
