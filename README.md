@@ -94,7 +94,9 @@ node index.js register --email <your email> --password <your password>
 
 #### Adding to the html page
 
-<p>For put our app to your html page we use html tag</p> ```iframe```
+<p>For put our app to your html page we use html tag</p>
+ 
+```iframe```
 
 <p>Then you must create class for this tag with this properties</p>
 
