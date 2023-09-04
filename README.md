@@ -21,23 +21,20 @@
 
 <h3>Installation</h3>
 
-<h5>Client<h5>
+
+<h4>Client<h4>
 
 <p>Firts you need to install all depensies</p>
 
 ```
 npm i
-
 ```
-
 <p>Then only write</p>
-
 ```
 npm start
-
 ```
-
 <p>And it is all! Congratulations, we now have a client running!</p>
+
 
 <h4>Server</h4>
 
@@ -45,21 +42,18 @@ npm start
 
 ```
 npm i
-
 ```
 
 <p>For first use our app we must write one command for setup our app (this command only write once)</p>
 
 ```
 node index.js setup
-
 ```
 
 <p>Then we must register for manage your app (this is how you can register every administrator of this application)</p>
 
 ```
 node index.js register --email <your email> --password <your password>
-
 ```
 
 <p>And it is all! Congratulations, we now have a server running!</p>
