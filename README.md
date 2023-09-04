@@ -18,9 +18,10 @@
     <li>Adjust the config for your needs.</li>
     <li>Lets go to installation!<li>
 </ol>
+
 <h3>Installation</h3>
 
-<h4>Client<h4>
+<h5>Client<h5>
 
 <p>Firts you need to install all depensies</p>
 
