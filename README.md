@@ -22,7 +22,7 @@
 
 <p>For hosting your app, you can use anything, you want, if you have low budget then you can host your app on render(i recommend)</p>
 
-<h3>2. Setup .env files variables<h3>
+### 2. Setup .env files variables
 
 <h5>List of used variables for client<h5>
 
