@@ -12,18 +12,17 @@
 
 <h3>Process</h2>
 
-<ol>
-    <li>Upload the Client and Server to your hosting services.</li>
-    <li>Setup .env files variables</li>
-    <li>Adjust the config for your needs.</li>
-    <li>Lets go to installation!<li>
-</ol>
+
+1. Upload the Client and Server to your hosting services.
+2. Setup .env files variables
+3. Adjust the config for your needs.
+4. Lets go to installation!
 
 <h3>Installation</h3>
 
 #### Client
 
-<p>Firts you need to install all depensies</p>
+<p>First you need to install all depensies</p>
 
 ```
 npm i
@@ -38,7 +37,7 @@ npm start
 <p>And it is all! Congratulations, we now have a client running!</p>
 
 
-### Server
+#### Server
 
 <p>First you nedd to install all depensies</p>
 
