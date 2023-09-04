@@ -101,8 +101,21 @@ node index.js register --email <your email> --password <your password>
 <details>
     <summary>Example</summary>
 
+    <h6>Html</h6>
+
     ```
         <iframe src="http://localhost:3000" class="app"></iframe>  
+    ```
+
+    <h6>CSS</h6>
+
+    ```CSS
+        .app {
+            border: 0;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
     ```
     
 </details>
