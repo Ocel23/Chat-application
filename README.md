@@ -118,6 +118,6 @@ node index.js register --email <your email> --password <your password>
 
 <p>The app also includes a vanilla html test file with css.</p>
 
-<p><strong>Congratulations, you already know everything you need, use the application.</strong><p>
+<p><strong>Congratulations, you already know everything you need, use the application!</strong><p>
 
 
