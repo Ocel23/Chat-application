@@ -10,7 +10,7 @@
 
 <p>If you have any questions, feel free to write to my email or discord. I wish you a great use :yum:.</p>
 
-<h3>Process</h3>
+<h2>Process</h2>
 
 <ol>
     <li>Upload the Client and Server to your hosting services.</li>
@@ -29,10 +29,13 @@
 ```
 npm i
 ```
+
 <p>Then only write</p>
+
 ```
 npm start
 ```
+
 <p>And it is all! Congratulations, we now have a client running!</p>
 
 
