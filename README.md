@@ -78,13 +78,13 @@ npm start
 npm i
 ```
 
-<p>For first use our app we must write one command for setup our app (this command only write once)</p>
+<p>For first use our app <strong>we must write one command for setup our app (this command only write once)</strong></p>
 
 ```
 node index.js setup
 ```
 
-<p>Then we must register for manage your app (this is how you can register every administrator of this application)</p>
+<p><strong>Then we must register for manage your app (this is how you can register every administrator of this application)</strong></p>
 
 ```
 node index.js register --email <your email> --password <your password>
