@@ -10,7 +10,7 @@ import { config } from "../config";
 
 export async function action({ request }) {
 
-    //nodejs api ADDRESS
+    //nodejs api adress
     const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     //get data from request object
     const formData = await request.formData();

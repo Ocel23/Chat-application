@@ -40,7 +40,7 @@ const requireAuth = (req, res, next) => {
 }
 
 //connect to db
-mongoose.connect(process.env.MONGO_DB_ADDRESS, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGO_DB_ADRESS, { useNewUrlParser: true })
     .then(console.log(chalk.green("Connected to database.")))
     .catch((err) => console.log(chalk.red("Cannot connected to database") + err))
 
@@ -85,7 +85,10 @@ const statisticsSchema = new mongoose.Schema({
     onlineConversations: Number,
     todayConversations: Number,
     countOfCreatedConversations: Number,
-    dateOfLastCreatedConversation: Date,
+    dateOfLastCreatedConversation: {
+        type: Date,
+        default: Date.now
+    },
 })
 
 //create models
@@ -322,7 +325,7 @@ app.post("/email/send", (req, res) => {
     const user = process.env.USER_EMAIL_ADDRESS;
     const transporter = nodemailer.createTransport({
         pool: Boolean(process.env.EMAIL_POOL),
-        host: process.env.EMAIL_HOST_ADDRESS,
+        host: process.env.EMAIL_HOST_ADRESS,
         port: parseInt(process.env.EMAIL_HOST_PORT),
         secure: Boolean(process.env.EMAIL_HOST_SECURE),
         auth: {
@@ -363,21 +366,14 @@ app.get("/statistics", (req, res) => {
         })
 })
 
-app.put("/statistics", (req, res) => {
-    let statisticsID;
-    Statistics.findOne()
+app.put("/statistics/:id", (req, res) => {
+    Statistics.findByIdAndUpdate(req.params.id, req.body)
         .then(statistics => {
-            statisticsID = statistics._id;
             res.send(statistics);
         })
-        .catch(() => {
-            res.send("Statistics information could not be loaded");
-        })
-    Statistics.findByIdAndUpdate(statisticsID, req.body)
-        .then(statistics => {
-                res.send(statistics);
-        })
-        .catch(() => res.send("Statistics could not updated"));  
+    .catch(() => {
+            res.send("Statistics could not updated");
+    }) 
 })
 
 app.post("/statistics", (req, res) => {
@@ -450,7 +446,6 @@ yargs
                     onlineConversations: 0,
                     todayConversations: 0,
                     countOfCreatedConversations: 0,
-                    dateOfLastCreatedConversation: null,
                 });
                 console.log(chalk.green("All files for app was successfully created."));
             } catch (err) {

@@ -10,7 +10,7 @@ import showServerError from "../utils/showServerError";
 
 export async function loader() {
 
-    //nodejs api ADDRESS
+    //nodejs api adress
     const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     try {
         //require auth
@@ -42,7 +42,7 @@ export async function loader() {
 
 export default function Dashboard() {
 
-    //nodejs api ADDRESS
+    //nodejs api adress
     const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
     //date from loader
     const data = useLoaderData();

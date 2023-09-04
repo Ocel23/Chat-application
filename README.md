@@ -91,3 +91,18 @@ node index.js register --email <your email> --password <your password>
 ```
 
 <p>And it is all! Congratulations, we now have a server running!</p>
+
+#### Adding to the html page
+
+<p>For put our app to your html page we use html tag ```iframe```</p>
+
+<p>Then you must create class for this tag with this properties</p>
+
+<details>
+    <summary>Example</summary>
+    ```ruby
+        <iframe src="http://localhost:3000" class="app"></iframe>  
+    ```
+</details>
+
+

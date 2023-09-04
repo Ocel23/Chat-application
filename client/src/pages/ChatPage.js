@@ -30,7 +30,7 @@ export async function loader({ request}) {
             users: 1
         });
         const statistics = await apiGet(`${API_URL}/statistics`);   
-        await apiPut(`${API_URL}/statistics`, {
+        await apiPut(`${API_URL}/statistics/${statistics[0]._id}`, {
             countOfCreatedConversations: statistics[0].countOfCreatedConversations + 1,
             dateOfLastCreatedConversation: Date.now(),
             todayConversations: statistics[0].todayConversations + 1,
@@ -109,7 +109,7 @@ export default function ChatPage() {
     async function changeCountOfOnlineConversations() {
         try {
             const statistics = await apiGet(`${API_URL}/statistics`);  
-            await apiPut(`${API_URL}/statistics`, {
+            await apiPut(`${API_URL}/statistics/${statistics[0]._id}`, {
                 onlineConversations: statistics[0].onlineConversations - 1,
             })
         } catch(err) {
