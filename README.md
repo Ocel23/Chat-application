@@ -101,7 +101,7 @@ node index.js register --email <your email> --password <your password>
 <details>
     <summary>Example</summary>
 
-    ```html
+    ```HTML
         <iframe src="http://localhost:3000" class="app"></iframe>  
     ```
 
