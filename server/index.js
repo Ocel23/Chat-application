@@ -42,7 +42,7 @@ const requireAuth = (req, res, next) => {
 //connect to db
 mongoose.connect(process.env.MONGO_DB_ADRESS, { useNewUrlParser: true })
     .then(console.log(chalk.green("Connected to database.")))
-    .catch((err) => console.log(chalk.red("Cannot connected to database. ") + err))
+    .catch((err) => console.log(chalk.red("Cannot connected to database") + err))
 
 server.listen(process.env.PORT_OF_SERVER, () => {
     console.log(chalk.yellow("Listening on port ") + process.env.PORT_OF_SERVER)
@@ -364,7 +364,16 @@ app.get("/statistics", (req, res) => {
 })
 
 app.put("/statistics", (req, res) => {
-    Statistics.findByIdAndUpdate("64e5f9e152633a2a9e4b22f7", req.body)
+    let statisticsID;
+    Statistics.findOne()
+        .then(statistics => {
+            statisticsID = statistics._id;
+            res.send(statistics);
+        })
+        .catch(() => {
+            res.send("Statistics information could not be loaded");
+        })
+    Statistics.findByIdAndUpdate(statisticsID, req.body)
         .then(statistics => {
                 res.send(statistics);
         })
@@ -406,28 +415,48 @@ function apiPost(url, data) {
 
 const yargs = require("yargs");
 
-yargs.command("register", "register admin to db", (yargs) => {
-    yargs.positional("email", {
-        describe: "email of user",
-        type: "string"
-    }),
-    yargs.positional("password", {
-        describe: "password of user",
-        type: "string"
-    })
+yargs
+    .command("register", "register admin to db", (yargs) => {
+        yargs.positional("email", {
+            describe: "email of user",
+            type: "string"
+        }),
+        yargs.positional("password", {
+            describe: "password of user",
+            type: "string"
+        })
+        }, (argv) => {
+            async function registerAdmin() {
+                try {
+                    await apiPost(`${process.env.NODEJS_BE_ADDRESS}/user/register`, {
+                        email: argv.email,
+                        password: argv.password
+                    });
+                    console.log(chalk.green("User successfully created."));
+                } catch (err) {
+                    return console.log(err);
+                }
+            }
+            registerAdmin();
+        }).argv
+    
+yargs
+    .command("setup", "create files to apps in db", () => {
+        
     }, (argv) => {
-        async function registerAdmin() {
+        async function createAppFiles() {
             try {
-                await apiPost(`${process.env.NODEJS_BE_ADDRESS}/user/register`, {
-                    email: argv.email,
-                    password: argv.password
+                await apiPost(`${process.env.NODEJS_BE_ADDRESS}/statistics`, {
+                    onlineConversations: 0,
+                    todayConversations: 0,
+                    countOfCreatedConversations: 0,
+                    dateOfLastCreatedConversation: null,
                 });
-                console.log(chalk.green("User successfully created."));
+                console.log(chalk.green("All files for app was successfully created."));
             } catch (err) {
                 return console.log(err);
             }
         }
-        registerAdmin();
+        createAppFiles();
     }).argv;
-
 
