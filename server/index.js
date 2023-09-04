@@ -324,16 +324,16 @@ app.post("/email/send", (req, res) => {
     const {email, subject, message} = req.body;
     const user = process.env.USER_EMAIL_ADDRESS;
     const transporter = nodemailer.createTransport({
-        pool: Boolean(process.env.EMAIL_POOL),
+        pool: Boolean(process.env.EMAIL_POOL) || false,
         host: process.env.EMAIL_HOST_ADRESS,
         port: parseInt(process.env.EMAIL_HOST_PORT),
-        secure: Boolean(process.env.EMAIL_HOST_SECURE),
+        secure: Boolean(process.env.EMAIL_HOST_SECURE) || true,
         auth: {
-            user: process.env.EMAIL_AUTH_USERNAME,
-            pass: process.env.EMAIL_AUTH_PASSWORD
+            user: process.env.EMAIL_AUTH_USERNAME || null,
+            pass: process.env.EMAIL_AUTH_PASSWORD || null,
         },
         tls: {
-            rejectUnauthorized: process.env.TLS_REJECT
+            rejectUnauthorized: process.env.TLS_REJECT || false
         }
     })
     

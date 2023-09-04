@@ -3,7 +3,7 @@
 <h2>Informations:</h2>
 <p>I present to you my first post on my github. This is a template that the user can deploy on any website.</p>
 <p>The application contains a config that the user can configure as desired. The application was created using React and NodeJS technologies, it only supports <strong>MongoDB</strong> so far.</p>
-<p>You can find a sample application to try at <a href="#chat-aplication-tempalte-with-chat-bot">this link</a>.</p>
+<p>You can find a sample application to try at <a href="https://chat-app-template.onrender.com/">this link</a>.</p>
 
 > [!WARNING]
 > <strong>The code cannot be further modified without the consent of the owner.</strong> Only config.js and env files.<br>
@@ -26,22 +26,22 @@
 
 ##### List of used variables for client
 
-+ REACT_APP_NODEJS_ADDRESS
++ REACT_APP_NODEJS_ADDRESS=_adress of node js api for BE_
 
 ##### List of used variables for server
 
-+ MONGO_DB_ADDRESS=
-+ NODEJS_HOST_DEPLOY_ADDRESS=
-+ NODEJS_BE_ADDRESS=
-+ PORT_OF_SERVER=
-+ EMAIL_HOST_ADDRESS=
-+ EMAIL_HOST_PORT=
-+ EMAIL_HOST_SECURE=
-+ EMAIL_POOL=
-+ EMAIL_AUTH_USERNAME=
-+ EMAIL_AUTH_PASSWORD=
-+ TLS_REJECT=
-+ USER_EMAIL_ADDRESS=
++ MONGO_DB_ADDRESS=_adress of mongo db_
++ NODEJS_HOST_DEPLOY_ADDRESS=_adress of deployed app_
++ NODEJS_BE_ADDRESS=_adress of ndoe js api for BE_
++ PORT_OF_SERVER=_port of node js server_
++ EMAIL_HOST_ADDRESS=_address of email hosting_
++ EMAIL_HOST_PORT=_email host port_
++ EMAIL_HOST_SECURE=_if email secure(true/false)_
++ EMAIL_POOL=_if pool(true/false)_
++ EMAIL_AUTH_USERNAME=_email username_
++ EMAIL_AUTH_PASSWORD=_email auth password_
++ TLS_REJECT=_if is Transport Layer Security(true/false)_
++ USER_EMAIL_ADDRESS=_e-mail address for receiving e-mails _
 
 <h3>3. Adjust the config for your needs</h3>
 
@@ -94,8 +94,8 @@ node index.js register --email <your email> --password <your password>
 
 #### Adding to the html page
 
-<p>For put our app to your html page we use html tag</p>
- 
+<p>For put our app to your html page we use html tag</p> 
+
 ```iframe```
 
 <p>Then you must create class for this tag with this properties</p>
