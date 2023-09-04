@@ -40,7 +40,7 @@ const requireAuth = (req, res, next) => {
 }
 
 //connect to db
-mongoose.connect(process.env.MONGO_DB_ADRESS, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGO_DB_ADDRESS, { useNewUrlParser: true })
     .then(console.log(chalk.green("Connected to database.")))
     .catch((err) => console.log(chalk.red("Cannot connected to database") + err))
 
@@ -322,7 +322,7 @@ app.post("/email/send", (req, res) => {
     const user = process.env.USER_EMAIL_ADDRESS;
     const transporter = nodemailer.createTransport({
         pool: Boolean(process.env.EMAIL_POOL),
-        host: process.env.EMAIL_HOST_ADRESS,
+        host: process.env.EMAIL_HOST_ADDRESS,
         port: parseInt(process.env.EMAIL_HOST_PORT),
         secure: Boolean(process.env.EMAIL_HOST_SECURE),
         auth: {

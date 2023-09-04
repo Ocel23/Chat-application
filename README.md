@@ -14,11 +14,40 @@
 
 
 1. Upload the Client and Server to your hosting services.
-2. Setup .env files variables
+2. Setup .env files variables.
 3. Adjust the config for your needs.
 4. Lets go to installation!
 
-<h3>Installation</h3>
+<h3>1. Hosting</h3>
+
+<p>For hosting your app, you can use anything, you want, if you have low budget then you can host your app on render(i recommend)</p>
+
+<h3>2.Setup .env files variables<h3>
+
+<h5>List of used variables for client<h5>
+
++ REACT_APP_NODEJS_ADDRESS
+
+<h5>List of used variables for server<h5>
+
++ MONGO_DB_ADDRESS=
++ NODEJS_HOST_DEPLOY_ADDRESS=
++ NODEJS_BE_ADDRESS=
++ PORT_OF_SERVER=
++ EMAIL_HOST_ADDRESS=
++ EMAIL_HOST_PORT=
++ EMAIL_HOST_SECURE=
++ EMAIL_POOL=
++ EMAIL_AUTH_USERNAME=
++ EMAIL_AUTH_PASSWORD=
++ TLS_REJECT=
++ USER_EMAIL_ADDRESS=
+
+<h3>3. Adjust the config for your needs</h3>
+
+https://github.com/Ocel23/Chat-aplication/blob/afdde493988d892569c285397a91212f2adc2cc6/client/src/config.js
+
+<h3>4. Installation</h3>
 
 #### Client
 
