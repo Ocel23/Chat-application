@@ -98,8 +98,7 @@ node index.js register --email <your email> --password <your password>
 
 <p>Then you must create class for this tag with this properties</p>
 
-<details>
-    <summary>Example</summary>
+
 
     <h6>Html</h6>
 
@@ -117,7 +116,7 @@ node index.js register --email <your email> --password <your password>
             height: 100%;
         }
     ```
-    
-</details>
+
+
 
 
