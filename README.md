@@ -10,7 +10,7 @@
 
 <p>If you have any questions, feel free to write to my email or discord. I wish you a great use :yum:.</p>
 
-<h2>Process</h2>
+<h3>Process</h2>
 
 <ol>
     <li>Upload the Client and Server to your hosting services.</li>
@@ -20,7 +20,6 @@
 </ol>
 
 <h3>Installation</h3>
-
 
 <h4>Client<h4>
 
