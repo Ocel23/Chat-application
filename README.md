@@ -127,7 +127,7 @@ node index.js register --email <your email> --password <your password>
 
 <p>Also i would like that you share my app with your friends.</p>
 
-<a href="Chat app.pdf">Here you can dowland preview of app in pdf</a>
+<a href="Chat app.pdf">Here you can download preview of app in pdf</a>
 
 
 
