@@ -260,7 +260,7 @@ app.delete("/user/login", (req, res) => {
 app.get("/users/online", (req, res) => {
     User.findOne().where("isOnline").equals(true)
         .then(user => {
-            res.send({message: "Anybody is online."});
+            res.send("Is online.");
         })
         .catch(() => {
             res.status(404).send("No admin is online");
