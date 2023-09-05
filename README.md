@@ -127,7 +127,7 @@ node index.js register --email <your email> --password <your password>
 
 <p>Also i would like that you share my app with your friends.</p>
 
-<a href="https://github.com/Ocel23/Chat-aplication/blob/0eeb91ef300714d54c8bdf2f91db1f3c37ce9a65/Chat%20app.pdf" download="proposed_file_name">Here you can dowland preview of app in pdf</a>
+<a href="https://github.com/Ocel23/Chat-aplication/blob/0eeb91ef300714d54c8bdf2f91db1f3c37ce9a65/Chat%20app.pdf" download>Here you can dowland preview of app in pdf</a>
 
 
 
