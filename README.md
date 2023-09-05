@@ -121,7 +121,7 @@ node index.js register --email <your email> --password <your password>
 <p><strong>Congratulations, you already know everything you need, use the application!</strong><p>
 
 > [!NOTE]
-> If you want to me support for next cool project that you can <a href="https://www.buymeacoffee.com/ocel23">buy me a coffe</a>.
+> If you want to me support for next cool project that you can <a href="https://www.buymeacoffee.com/ocel23">buy me a coffe🍮</a>.
 
 <p>If you want to me contant that i am active in <a href="#">discord</a>.
 
