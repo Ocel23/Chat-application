@@ -187,18 +187,6 @@ app.delete("/api/conversationMessages/:roomID", (req, res) => {
         })
 })
 
-/*
-app.delete("/api/conversationMessages", (req, res) => {
-    Message.deleteMany()
-        .then(result => {
-            res.send(result);
-        })
-        .catch(() => {
-            res.send("Cannot delete all messages")
-        })
-})
-*/
-
 //LOGIN SYSTEM
 
 //POST požadavek registraci
@@ -272,7 +260,7 @@ app.delete("/user/login", (req, res) => {
 app.get("/users/online", (req, res) => {
     User.findOne().where("isOnline").equals(true)
         .then(user => {
-            res.send(user);
+            res.send({message: "Anybody is online."});
         })
         .catch(() => {
             res.status(404).send("No admin is online");
