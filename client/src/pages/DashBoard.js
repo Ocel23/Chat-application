@@ -24,11 +24,12 @@ export async function loader() {
     //fucntion for handle today conversation value
     async function handleDeleteTodayConversations() {
         const today = new Date();
-        const conversationDate = new Date(statistics1[0].dateOfLastCreatedConversation);
+        const conversationDate = new Date(statistics1[0].dateOfLastCreatedConversation); 
         if (conversationDate.getDate() !== today.getDate()) {
-            await apiPut(`${API_URL}/statistics`, {
+            const statistics = await apiGet(`${API_URL}/statistics`);   
+            await apiPut(`${API_URL}/statistics/${statistics[0]._id}`, {
                 todayConversations: 0,
-            }); 
+            });   
         }
     }
     handleDeleteTodayConversations();
