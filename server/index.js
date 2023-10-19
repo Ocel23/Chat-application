@@ -442,4 +442,3 @@ yargs
         }
         createAppFiles();
     }).argv;
-
