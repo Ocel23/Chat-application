@@ -6,8 +6,10 @@ import Swal from "sweetalert2";
 
 export default async function requireAuth() {
     try {
+        //nodejs api address
+        const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
         //get user data
-        await apiGet("http://localhost:5000/user/login");
+        await apiGet(`${API_URL}/user/login`);
     } catch(err) {
         //if not login than redirect do /
         if (err instanceof requestError && err.response.status === 401) {
