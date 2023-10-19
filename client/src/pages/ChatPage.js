@@ -20,7 +20,15 @@ export async function loader({ request}) {
     //get id of room from query
     const room = new URL(request.url).searchParams.get("room");
     //get online users for count, if nobody is online then redirect to email page
-    await apiGet(`${API_URL}/users/online`).catch(() => {throw redirect("/email")});
+    try {
+        await apiGet(`${API_URL}/users/online`);
+    } catch(err) {
+        if (err instanceof requestError && err.response.status == 404) {
+            throw redirect("/email");
+        } else {
+            showServerError(err.message);
+        }
+    }
     //get count of connected user to select room
     const countOfConnectUsers = await apiGet(`${API_URL}/api/conversations/${room}`);
     if (countOfConnectUsers == null) {

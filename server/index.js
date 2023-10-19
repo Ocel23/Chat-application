@@ -256,15 +256,19 @@ app.delete("/user/login", (req, res) => {
     })
 })
 
-//GET request for online users
+//GET requ est for online users
 app.get("/users/online", (req, res) => {
     User.findOne().where("isOnline").equals(true)
-        .then(user => {
-            res.send("Is online.");
+        .then((user) => {
+            if (user) {
+                res.send({ message: "Is online" });
+            } else {
+                res.status(404).send("No admin is online");
+            }
         })
-        .catch(() => {
-            res.status(404).send("No admin is online");
-        })
+        .catch((error) => {
+            res.status(500).send("Error while fetching online users: " + error.message);
+        });
 })
 
 //PUT request for online user by id
@@ -344,7 +348,7 @@ app.post("/email/send", (req, res) => {
 })
 
 //statistics
-app.get("/statistics", (req, res) => {
+app.get("/statistics/", (req, res) => {
     Statistics.find()
         .then(statistics => {
             res.send(statistics);

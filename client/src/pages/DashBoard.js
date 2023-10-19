@@ -38,6 +38,7 @@ export async function loader() {
     return defer({conversations : conversations1, statistics: statistics1});
 }
 
+
 export default function Dashboard() {
 
     //nodejs api adress
