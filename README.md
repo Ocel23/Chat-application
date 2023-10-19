@@ -5,7 +5,7 @@
 <h2>Informations:</h2>
 <p>I present to you my first post on my github. This is a template that the user can deploy on any website.</p>
 <p>The application contains a config that the user can configure as desired. The application was created using React and NodeJS technologies, it only supports <strong>MongoDB</strong> so far.</p>
-<p>You can find a sample application to try at <a href="https://chat-app-template.onrender.com/">this link(but only work chat bot, chta app +  dashboard and login screen are on the bottom of this article)</a>.</p>
+<p>You can find a sample application to try at <a href="https://chat-app-template.onrender.com/">this link</a>.</p>
 
 > [!WARNING]
 > <strong>The code cannot be further modified without the consent of the owner.</strong> Only config.js and env files.<br>
