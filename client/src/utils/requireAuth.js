@@ -10,6 +10,7 @@ export default async function requireAuth() {
         const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
         //get user data
         await apiGet(`${API_URL}/user/login`);
+        
     } catch(err) {
         //if not login than redirect do /
         if (err instanceof requestError && err.response.status === 401) {

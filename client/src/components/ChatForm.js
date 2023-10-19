@@ -28,7 +28,9 @@ export default function ChatForm({isAdmin, messageInput, socket, handleInput , r
     //function for create message
     async function createMessage() {
         try {
-            await apiPost("http://localhost:5000/api/conversationMessages", {
+            //nodejs api address
+            const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
+            await apiPost(`${API_URL}/api/conversationMessages`, {
                 text: messageInput,
                 id_of_room: room,
                 dateAdded: Date.now,
