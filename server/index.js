@@ -27,7 +27,7 @@ app.set("trust proxy", 1);
 app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     proxy: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS }),
     cookie: {
