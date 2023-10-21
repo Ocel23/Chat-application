@@ -2,6 +2,7 @@ const express = require("express");
 const expressSession= require("express-session");
 const nodemailer = require("nodemailer");
 const chalk = require("chalk-v2");
+const cookieParser = require("cookie-parser");
 const app = express();
 //env data
 require("dotenv").config();
@@ -22,17 +23,18 @@ require("./cors")(app);
 //convert each response data to json
 app.use(express.json())
 
+app.use(cookieParser());
+
 app.set("trust proxy", 1);
 
 app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
     saveUninitialized: true,
-    proxy: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS }),
     cookie: {
         secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24,
         sameSite: "none"
     }
 }));
