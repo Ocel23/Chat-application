@@ -27,11 +27,11 @@ app.set("trust proxy", 1);
 app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        sameSite: "none"
+        sameSite: "strict"
     },
     store: new MongoStore({ mongoUrl: process.env.MONGO_DB_ADRESS }),
 }));
