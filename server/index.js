@@ -26,7 +26,7 @@ app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS, touchAfter: 24 * 3600}),
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true
