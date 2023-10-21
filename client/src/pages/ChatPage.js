@@ -117,7 +117,6 @@ export default function ChatPage() {
         }
     }
 
-
     //function for change count of online conversations
     async function changeCountOfOnlineConversations() {
         try {
