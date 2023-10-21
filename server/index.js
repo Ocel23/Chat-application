@@ -27,13 +27,14 @@ app.set("trust proxy", 1);
 app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    proxy: true,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS }),
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        sameSite: "strict"
-    },
-    store: new MongoStore({ mongoUrl: process.env.MONGO_DB_ADRESS }),
+        sameSite: "none"
+    }
 }));
 
 //function for requireAuth
