@@ -22,6 +22,8 @@ require("./cors")(app);
 //convert each response data to json
 app.use(express.json())
 
+app.set('trust proxy', 1)
+
 app.use(expressSession({
     secret: "a/#$sd#0$",
     name: "login",
