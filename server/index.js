@@ -28,10 +28,10 @@ app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS }),
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
+        sameSite: "none"
     }
 }));
 
