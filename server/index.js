@@ -14,6 +14,7 @@ const io = require("socket.io")(server, {
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const MongoStore = require("connect-mongo");
 //add libraries
 
 require("./cors")(app);
@@ -25,6 +26,7 @@ app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS }),
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true
