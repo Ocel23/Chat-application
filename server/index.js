@@ -60,7 +60,6 @@ const userSchema = new mongoose.Schema({
     isOnline: Boolean
 })
 
-
 const conversationSchema = new mongoose.Schema({
     id_of_room: String,
     users: Number,
