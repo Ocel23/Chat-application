@@ -25,17 +25,18 @@ app.use(express.json())
 
 app.use(cookieParser());
 
-app.set("trust proxy", 1);
+
 
 app.use(expressSession({
     secret: "a/#$sd#0$",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS }),
     cookie: {
         secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24,
-        sameSite: "none"
+   
     }
 }));
 
