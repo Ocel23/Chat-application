@@ -166,25 +166,29 @@ app.post("/api/conversationMessages", (req, res) => {
 
 //GET request for messages by room id
 
-app.get("/api/conversationMessages/:roomID", (req, res) => {
-    Message.find().populate("room").where("id_of_room").equals(req.params.roomID)
-        .then(result => {
-            res.send(result);
-        })
-        .catch(() => {
-            res.status(404).send("Could not find any message from this room")
-        })
+app.get("/api/conversationMessages/:conversationID", (req, res) => {
+
+    Message.find().where("room").equals(req.params.conversationID)
+    .then((messages) => {
+        res.send(messages);
+    })
+    .catch(() => {
+        res.status(404).send("No messages with this room id was not found")
+    })
+
 })
 
 //DELETE request for messages by room id
-app.delete("/api/conversationMessages/:roomID", (req, res) => {
-    Message.deleteMany().populate("room").where("id_of_room").equals(req.params.roomID)
-        .then(result => {
-            res.send(result);
-        })
-        .catch(() => {
-            res.status(404).send("No message with this room id was not found")
-        })
+app.delete("/api/conversationMessages/:conversationID", (req, res) => {
+
+    Message.deleteMany().where("room").equals(req.params.conversationID)
+    .then((messages) => {
+        res.send(messages);
+    })
+    .catch(() => {
+        res.status(404).send("No messages with this room id was not found")
+    })
+
 })
 
 //LOGIN SYSTEM
@@ -402,6 +406,7 @@ function apiPost(url, data) {
 }
 
 const yargs = require("yargs");
+const { emitWarning } = require("process");
 
 yargs
     .command("register", "register admin to db", (yargs) => {

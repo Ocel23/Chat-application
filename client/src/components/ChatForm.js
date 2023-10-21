@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SendIcon from "../images/chat-send-icon.svg";
 import TrashCan from "../images/trash-can.svg";
-import { apiPost, requestError } from "../utils/api";
+import { apiPost, apiGet, requestError } from "../utils/api";
 import showServerError from "../utils/showServerError";
 import { useNavigate } from "react-router-dom";
 import { config } from "../config";
@@ -28,11 +28,14 @@ export default function ChatForm({isAdmin, messageInput, socket, handleInput , r
     //function for create message
     async function createMessage() {
         try {
-            //nodejs api address
+
             const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
+            //nodejs api address
+            const conversation = await apiGet(`${API_URL}/api/conversations/${room}`);
+
             await apiPost(`${API_URL}/api/conversationMessages`, {
                 text: messageInput,
-                id_of_room: room,
+                room: conversation._id,
                 dateAdded: Date.now,
                 senderIsAdmin: isAdmin ? true : false
             });    

@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { defer, redirect, useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
+import { Navigate, defer, redirect, useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 import { apiPost, apiDelete, apiGet , requestError, apiPut } from "../utils/api";
 import io from "socket.io-client";
 import Header from "../components/Header"
 import dateFormater from "../utils/dateFormater";
 import Swal from 'sweetalert2';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import withReactContent from 'sweetalert2-react-content'
 import MessageTemplate from "../components/MessagesTemplates";
 import ChatMessages from "../components/ChatMessages";
@@ -51,11 +53,14 @@ export async function loader({ request}) {
     }
     //change count by one
     if (countOfConnectUsers !== null) {
-        apiPut(`${API_URL}/api/conversations/${room}`, {users: countOfConnectUsers.users + 1});  
+        apiPut(`${API_URL}/api/conversations/${room}`, {users: countOfConnectUsers.users + 1}); 
+        //get messages from conversation by id
+        const data = await apiGet(`${API_URL}/api/conversationMessages/${countOfConnectUsers._id}`);
+        return defer({messages: data}); 
     }
-    //get messages from conversation by id
-    const data = await apiGet(`${API_URL}/api/conversationMessages/${room}`);
-    return defer({messages: data});
+
+    return null;
+    
 }
 
 export default function ChatPage() {
@@ -131,17 +136,45 @@ export default function ChatPage() {
     
     //function for delete room
     async function deleteRoom() {
-        await apiDelete(`${API_URL}/api/conversations/${room}`).catch((err) => {throw err});
+        try {
+            await apiDelete(`${API_URL}/api/conversations/${room}`);    
+        } catch(err) {
+            if (err instanceof requestError) {
+                showServerError(err.response.text())
+            } else {
+                showServerError(err.message);
+            }
+        }
+        
     }
 
     //function for delete all messages in conversation
     async function deleteAllMessages() {
-        await apiDelete(`${API_URL}/api/conversationMessages/${room}`).catch((err) => {throw err})
+        try {
+            const conversation = await apiGet(`${API_URL}/api/conversations/${room}`);
+            await apiDelete(`${API_URL}/api/conversationMessages/${conversation._id}`); 
+        } catch(err) {
+            if (err instanceof requestError) {
+                showServerError(err.response.text())
+            } else {
+                showServerError(err.message);
+            }
+        }
+        
     }
 
     //function change user count by -1
     async function changeUserCountOnLeave() {
-        await apiPut(`${API_URL}/api/conversations/${room}`, {users: 1});  
+        try {
+            await apiPut(`${API_URL}/api/conversations/${room}`, {users: 1});      
+        } catch(err) {
+            if (err instanceof requestError) {
+                showServerError(err.response.text())
+            } else {
+                showServerError(err.message);
+            }
+        }
+        
     }
 
     //fucntion for remove conversation by admin
@@ -216,7 +249,7 @@ export default function ChatPage() {
                         timer: 3000
                     })
                     setTimeout(() => {
-                        return window.close();
+                        window.close();
                     }, 3000);
                 } catch(err) {
                     if (err instanceof requestError && err.response.status === 401) {
@@ -282,7 +315,8 @@ export default function ChatPage() {
                 <MessageTemplate showTemplate={showTemplate} handleInput={handleInput} handleShowTemplate={handleShowTemplate} handleFocus={handleFocus}/>
                 <ChatMessages messagesData={messagesData}  messages={messages} isAdmin={isAdmin}/>
                 <ChatForm isAdmin={isAdmin} messageInput={messageInput} socket={socket} handleInput={handleInput} room={room} cancelConversation={cancelConversation} showTemplates={showTemplates} inputRef={inputRef}/>
-            </div>    
+            </div>
+            <ToastContainer autoClose={2000}/>   
         </>
         
         
