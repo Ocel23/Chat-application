@@ -25,7 +25,7 @@ app.use(express.json())
 
 app.use(cookieParser());
 
-
+app.set("trust proxy", 1);
 
 app.use(expressSession({
     secret: "a/#$sd#0$",
@@ -36,7 +36,7 @@ app.use(expressSession({
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24,
-   
+        sameSite: "none"
     }
 }));
 
