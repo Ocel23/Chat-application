@@ -32,7 +32,8 @@ app.use(expressSession({
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
         sameSite: "none"
-    }
+    },
+    store: new MongoStore({ mongoUrl: process.env.MONGO_DB_ADRESS }),
 }));
 
 //function for requireAuth
