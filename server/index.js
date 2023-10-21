@@ -167,7 +167,6 @@ app.post("/api/conversationMessages", (req, res) => {
 //GET request for messages by room id
 
 app.get("/api/conversationMessages/:conversationID", (req, res) => {
-
     Message.find().where("room").equals(req.params.conversationID)
     .then((messages) => {
         res.send(messages);
@@ -175,12 +174,10 @@ app.get("/api/conversationMessages/:conversationID", (req, res) => {
     .catch(() => {
         res.status(404).send("No messages with this room id was not found")
     })
-
 })
 
 //DELETE request for messages by room id
 app.delete("/api/conversationMessages/:conversationID", (req, res) => {
-
     Message.deleteMany().where("room").equals(req.params.conversationID)
     .then((messages) => {
         res.send(messages);
@@ -188,7 +185,6 @@ app.delete("/api/conversationMessages/:conversationID", (req, res) => {
     .catch(() => {
         res.status(404).send("No messages with this room id was not found")
     })
-
 })
 
 //LOGIN SYSTEM
