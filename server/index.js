@@ -32,7 +32,6 @@ app.use(expressSession({
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: false,
-        sameSite: true,
         maxAge: 1000 * 60 * 60 * 7,
     }
 }));
