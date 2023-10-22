@@ -42,7 +42,8 @@
 + EMAIL_AUTH_USERNAME=_email username_
 + EMAIL_AUTH_PASSWORD=_email auth password_
 + TLS_REJECT=_if is Transport Layer Security(true/false)_
-+ USER_EMAIL_ADDRESS=_e-mail address for receiving e-mails _
++ USER_EMAIL_ADDRESS=_e-mail address for receiving e-mails
++ SESSION_SECRET=secret for session
 
 <h3>3. Adjust the config for your needs</h3>
 
