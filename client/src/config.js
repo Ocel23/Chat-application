@@ -1,4 +1,11 @@
+import { setAccent, setPrimary, setSecondary } from "./colors";
+
 export const config = {
+    colors: {
+        primary: setPrimary(""),
+        secondary: setSecondary(""),
+        accent: setAccent(""),
+    },
     botPage: {
         questionsWithAnswers: [
             {

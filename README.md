@@ -8,7 +8,7 @@
 <p>You can find a sample application to try at <a href="https://chat-app-template.onrender.com/">this link</a>.</p>
 
 > [!WARNING]
-> <strong>The code cannot be further modified without the consent of the owner.</strong> Only config.js and env files.<br>
+> <strong>The code cannot be further modified without the consent of the owner.</strong> Only config.js, icon.png in images folder and env files.<br>
 
 <p>If you have any questions, feel free to write to my email or discord. I wish you a great use :yum:.</p>
 
