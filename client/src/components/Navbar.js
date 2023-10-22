@@ -13,12 +13,16 @@ export default function Navbar({setOffline}) {
     //satte for get user data
     const [userEmail, setUserEmail] = useState();
 
+    //nodejs api address
+    const API_URL = process.env.REACT_APP_NODEJS_ADDRESS;
+
     //function for logout
     const logOut = () => {
         async function deleteLog() {
             setOffline();
             try {
-                const { message } = await apiDelete("http://localhost:5000/user/login"); 
+                
+                const { message } = await apiDelete(`${API_URL}/user/login`); 
                 toast.success(message, {
                     position: toast.POSITION.TOP_RIGHT
                 })
@@ -45,7 +49,7 @@ export default function Navbar({setOffline}) {
     useEffect(() => {
         async function getUser() {
             try {
-                const data = await apiGet("http://localhost:5000/user/login");
+                const data = await apiGet(`${API_URL}/user/login`);
                 setUserEmail(data.email);
             } catch(err) {
                 if (err instanceof requestError) {
