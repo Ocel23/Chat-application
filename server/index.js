@@ -22,19 +22,14 @@ require("./cors")(app);
 //convert each response data to json
 app.use(express.json())
 
-app.set("trust proxy", 1);
-
 app.use(expressSession({
     secret: process.env.SESSION_SECRET,
-    name: "login",
     resave: false,
-    proxy: true,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS}),
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: false,
-        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 7,
     }
 }));
