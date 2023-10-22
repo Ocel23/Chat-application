@@ -22,6 +22,8 @@ require("./cors")(app);
 //convert each response data to json
 app.use(express.json())
 
+app.set("trust proxy", 1);
+
 app.use(expressSession({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -30,8 +32,8 @@ app.use(expressSession({
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: false,
+        sameSite: true,
         maxAge: 1000 * 60 * 60 * 7,
-        sameSite: "none"
     }
 }));
 
