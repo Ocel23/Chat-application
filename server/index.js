@@ -28,7 +28,8 @@ app.use(expressSession({
     secret: process.env.SESSION_SECRET,
     name: "login",
     resave: false,
-    saveUninitialized: false,
+    proxy: true,
+    saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS}),
     cookie: {
         secure: process.env.NODE_ENV === "production",
