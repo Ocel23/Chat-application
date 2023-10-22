@@ -30,7 +30,7 @@ app.use(expressSession({
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS}),
     cookie: {
-        secure: false,
+        secure: true,
         httpOnly: false,
         maxAge: 1000 * 60 * 60 * 7,
     }
