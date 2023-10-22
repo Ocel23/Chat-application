@@ -104,7 +104,6 @@ const User = mongoose.model("user", userSchema);
 const Message = mongoose.model("message", messageSchema);
 const Statistics = mongoose.model("statistics", statisticsSchema)
 
-
 //POST request for conversations
 app.post("/api/conversations", (req, res) => {
     Conversation.create(req.body)
@@ -131,7 +130,6 @@ app.put("/api/conversations/:room", (req, res) => {
                 .catch(() => res.send("Conversation could not updated"));    
         })
         .catch(() => res.status(404).send("Conversation was not found"));
-    
 })
 
 //DELETE request for conversations
