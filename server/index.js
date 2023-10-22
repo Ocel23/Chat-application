@@ -32,6 +32,7 @@ app.use(expressSession({
     store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS}),
     cookie: {
         secure: process.env.NODE_ENV === "production",
+        httpOnly: false,
         sameSite: "none",
         maxAge: 1000 * 60 * 60 * 7,
     }
