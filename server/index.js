@@ -26,11 +26,12 @@ app.set("trust proxy", 1);
 
 app.use(expressSession({
     secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
+    name: "login",
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_ADRESS}),
     cookie: {
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         httpOnly: false,
         maxAge: 1000 * 60 * 60 * 7,
     }
