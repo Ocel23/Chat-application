@@ -33,11 +33,11 @@ export async function loader() {
         }
     }
     handleDeleteTodayConversations();
+
     //get all conversations
     const conversations1 =  await apiGet(`${API_URL}/api/conversations`);  
     return defer({conversations : conversations1, statistics: statistics1});
 }
-
 
 export default function Dashboard() {
 

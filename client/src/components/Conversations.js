@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Await } from "react-router-dom";
+import { Await, useNavigate } from "react-router-dom";
 import dateFormater from "../utils/dateFormater";
 
 export default function Conversations({conversations}) {
 
     //function for join room by id
+
      function joinRoom(id) {
         window.open(`/chat?room=${id}`, "_blank");
     }
 
     const [count, setCount] = useState([]);
+
+    const navigate = useNavigate();
 
     function countConversations() {
         const array = [];
@@ -21,7 +24,29 @@ export default function Conversations({conversations}) {
 
     useEffect(() => {
         countConversations();
+        const interval = setInterval(() => {
+            if (localStorage.getItem("length") != conversations.length) {
+                if (Notification.permission === "granted") {
+                    showNotification();
+                } else if (Notification.permission === "denied" || Notification.permission === "default") {
+                    Notification.requestPermission()
+                    .then((permission) => {
+                        if (permission === "granted") {
+                            showNotification();
+                        }
+                    })
+                }
+            }
+            navigate(0);
+            localStorage.setItem("length", conversations.length);
+        }, 300000);
+
+        return () => clearInterval(interval);
     }, [])
+
+    function showNotification() {
+        const notification = new Notification("New conversation from Chat app");
+    }
 
     //render
     function render(conversations) {
