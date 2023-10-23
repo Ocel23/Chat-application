@@ -53,7 +53,11 @@ export default function Conversations({conversations}) {
         const elements = conversations.map((conversation, index) => 
             {
                 if (conversation.users === 2) {
-                    return;
+                    return (
+                        <>
+                            <p className="dashboard--no-conversation">No conversation was found.</p>
+                        </>
+                    )
                 }
                 return (
                     <div className="dashboard-conversation--container" onClick={() => joinRoom(conversation.id_of_room)} key={conversation._id}>
