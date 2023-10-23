@@ -51,11 +51,18 @@ export default function Conversations({conversations}) {
     //render
     function render(conversations) {
         const elements = conversations.map((conversation, index) => 
-            <div className="dashboard-conversation--container" onClick={() => joinRoom(conversation.id_of_room)} key={conversation._id}>
-                    <p className="dashboard-conversation--count"><span className="dashboard-conversation--text">Conversation</span>&nbsp;{count[index]}</p>
-                    <p className="dashboard-conversation--date">{dateFormater(conversation.dateAdde)}</p>
-                    <p className="dashboard-conversation--online">Online: <span className="dashboard-conversation-online--text">{conversation.users}</span></p>
-            </div>
+            {
+                if (conversation.users === 2) {
+                    return;
+                }
+                return (
+                    <div className="dashboard-conversation--container" onClick={() => joinRoom(conversation.id_of_room)} key={conversation._id}>
+                            <p className="dashboard-conversation--count"><span className="dashboard-conversation--text">Conversation</span>&nbsp;{count[index]}</p>
+                            <p className="dashboard-conversation--date">{dateFormater(conversation.dateAdde)}</p>
+                            <p className="dashboard-conversation--online">Online: <span className="dashboard-conversation-online--text">{conversation.users}</span></p>
+                    </div>
+                    )
+            }
         )
         return (
             <>
