@@ -4,6 +4,7 @@ import BotConversation from "../components/Bot page/BotConversations";
 import Header from "../components/Header";
 import AppIcon from "../components/AppIcon";
 import { config } from "../config";
+import PageLoader from "../components/PageLoader";
 
 export default function BotPage() {
 
@@ -75,6 +76,7 @@ export default function BotPage() {
     //output
     return (
         <>
+            <PageLoader />
             <AppIcon handleBotAppState={handleBotAppState} />
             <div className={botAppState ? "bot-page-container--show" : "bot-page-container--hide"} style={style}>
                 <Header heading={config.botPage.title} handleBotAppState={handleBotAppState} logo={true} description={false} handleResize={handleResize}/>

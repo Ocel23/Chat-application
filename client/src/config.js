@@ -19,6 +19,8 @@ export const config = {
         repeatQuestionYesText: "Yes",
         repeatQuestionNoText: "No",
         endMessageText: "Thank you that you used our bot. Have a nice day!",
+        contactSupportText: "Do you want to contact support?",
+        contactingSupportText: "Creating conversation..."
     },
     chatPage: {
         title: "Support",

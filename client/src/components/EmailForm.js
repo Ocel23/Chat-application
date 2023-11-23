@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import showServerError from "../utils/showServerError";
 import { config } from "../config";
+import PageLoader from "./PageLoader";
 
 export async function action({ request }) {
 
@@ -63,15 +64,19 @@ export default function EmailForm() {
 
     //output
     return (
-        <div className="email-form--container">
-            <Form method="post" replace className={close ? "email-form--hide" : "email-form--show"}>
-                <img className="email-form--close-icon" src={CloseIcon} onClick={() => backToHomePage()}></img>
-                <h5 className="email-form--heading">{config.emailPage.title}</h5>
-                <input type="email" placeholder={config.emailPage.emailPlaceholder} name="email" className="email-form--input" required/>
-                <input type="text" placeholder="Subject" name={config.emailPage.subjectPlaceholder} className="email-form--input" required/>
-                <textarea placeholder={config.emailPage.messagePlaceholder} name="message" className="email-form--textarea" required></textarea>
-                <button className="email-form--button" onClick={errorMessage && showServerError(errorMessage)} disabled={navigation.state === "submitting"}>{navigation.state === "submitting" ? config.emailPage.buttonSendingText : config.emailPage.buttonSendText}<img src={SendIcon} className="email-form--send-icon"></img></button>
-            </Form>
-        </div>
+        <>
+        <PageLoader />
+            <div className="email-form--container">
+                <Form method="post" replace className={close ? "email-form--hide" : "email-form--show"}>
+                    <img className="email-form--close-icon" src={CloseIcon} onClick={() => backToHomePage()}></img>
+                    <h5 className="email-form--heading">{config.emailPage.title}</h5>
+                    <input type="email" placeholder={config.emailPage.emailPlaceholder} name="email" className="email-form--input" required/>
+                    <input type="text" placeholder="Subject" name={config.emailPage.subjectPlaceholder} className="email-form--input" required/>
+                    <textarea placeholder={config.emailPage.messagePlaceholder} name="message" className="email-form--textarea" required></textarea>
+                    <button className="email-form--button" onClick={errorMessage && showServerError(errorMessage)} disabled={navigation.state === "submitting"}>{navigation.state === "submitting" ? config.emailPage.buttonSendingText : config.emailPage.buttonSendText}<img src={SendIcon} className="email-form--send-icon"></img></button>
+                </Form>
+            </div>
+        </>
+        
     )
 }

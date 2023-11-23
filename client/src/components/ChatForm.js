@@ -3,7 +3,7 @@ import SendIcon from "../images/chat-send-icon.svg";
 import TrashCan from "../images/trash-can.svg";
 import { apiPost, apiGet, requestError } from "../utils/api";
 import showServerError from "../utils/showServerError";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigation } from "react-router-dom";
 import { config } from "../config";
 
 export default function ChatForm({isAdmin, messageInput, socket, handleInput , room, cancelConversation, showTemplates, inputRef}) {
@@ -11,6 +11,8 @@ export default function ChatForm({isAdmin, messageInput, socket, handleInput , r
     const navigate = useNavigate();
 
     const [message, setMessage] = useState("");
+
+    const navigation = useNavigation();
 
     const sendMessage = () => {
         //check input message
@@ -70,11 +72,11 @@ export default function ChatForm({isAdmin, messageInput, socket, handleInput , r
             <form className={isAdmin ? "chat-form--container chat-form-container--admin" : "chat-form--container"}>
                 <div style={{display: "flex"}}>
                     <input type="text" onChange={(e) => handleChange(e)} onKeyDown={handleEnter} value={messageInput} className="chat-form--input" placeholder={config.chatPage.inputPlacelholder} autoFocus ref={inputRef}></input>
-                    <button type="button" onClick={sendMessage} className="chat-form--button"><img src={SendIcon} className="chat-form--img"></img></button>    
+                    <button type="button" onClick={sendMessage} className="chat-form--button" disabled={navigation.state === "submitting"}><img src={SendIcon} className="chat-form--img"></img></button>    
                 </div>
                 {isAdmin && 
                 <div className="chat-form-admin-tools--container">
-                    <button type="button" onClick={cancelConversation} className="chat-form-admin-tool--delete">Delete conversation&nbsp;&nbsp;<img src={TrashCan} className="chat-form-admin--delete-icon"></img></button>
+                    <button type="button" onClick={cancelConversation} className="chat-form-admin-tool--delete" disabled={navigation.state === "submitting"}>{navigation.state === "submitting" ? "Deleting conversation..." : "Delete conversation"}&nbsp;&nbsp;<img src={TrashCan} className="chat-form-admin--delete-icon"></img></button>
                     <p onClick={showTemplates} style={{cursor: "pointer"}}>Messages templates</p> 
                 </div>}
             </form>    

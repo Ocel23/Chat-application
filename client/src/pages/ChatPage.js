@@ -14,6 +14,7 @@ import ChatForm from "../components/ChatForm";
 import AppIcon from "../components/AppIcon";
 import showServerError from "../utils/showServerError";
 import { config } from "../config";
+import PageLoader from "../components/PageLoader";
 
 export async function loader({ request}) {
 
@@ -213,6 +214,7 @@ export default function ChatPage() {
         setSocket(newSocket);
         //delete room and messages on leave chat
         return () => {
+            
             //remove event listeners
             if (!isAdmin) {
                 window.removeEventListener("beforeunload", changeCountOfOnlineConversations)
@@ -221,6 +223,7 @@ export default function ChatPage() {
             } else if (isAdmin) {
                 window.removeEventListener("beforeunload", changeUserCountOnLeave);
             }
+            
             newSocket.close()  
         }
     }, [])
@@ -308,6 +311,7 @@ export default function ChatPage() {
     
     return (
         <>
+            <PageLoader />
             <AppIcon handleChatAppState={handleChatAppState}/>
             <div className={!chatAppState ? "chat-page-container--show" : "chat-page-container--hide"} style={style}>
                 <Header heading={config.chatPage.title} handleChatAppState={handleChatAppState} logo={false} description={true} handleResize={handleResize}/>

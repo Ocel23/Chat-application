@@ -4,6 +4,7 @@ import { apiPost, requestError, apiGet, } from "../utils/api";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import showServerError from "../utils/showServerError";
+import PageLoader from "../components/PageLoader";
 
 export async function action({ request }) {
 
@@ -76,7 +77,9 @@ export default function LoginPage() {
         
     //output
     return (
-        <div className="log-in--center">
+        <>
+            <PageLoader />
+            <div className="log-in--center">
             <div className="log-in--container">
                 <h1 className="log-in--heading">Log-in</h1>
                 <Form method="post" replace className="log-in--form">
@@ -85,7 +88,8 @@ export default function LoginPage() {
                     <button className="log-in--button" disabled={navigation.state === "submitting"} onClick={showError}>{navigation.state === "submitting" ? "Logging in" : "Log in"}</button>
                 </Form>
             </div>    
-        </div>
+            </div>
+        </>
         
     )
 }

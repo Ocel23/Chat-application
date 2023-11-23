@@ -1,9 +1,11 @@
 import { nanoid } from "nanoid";
 import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, useNavigation } from "react-router-dom";
 import BotQuestion from "./BotQuestion";
 import BotIcon from "../../images/icon.png";
 import Loader from "./Loader";
+import LoaderOnSubmit from "../PageLoader";
+import { config } from "../../config";
 
 export default function Questions({messages, loadingAnswer, handleMessages, messagesLenght}) {
 
@@ -11,6 +13,10 @@ export default function Questions({messages, loadingAnswer, handleMessages, mess
     const [isSelectOption, setIsSelectOption] = useState(false);
     //function for loading questions
     const [loadingQuestionsState, setLoadingQuestionsState] = useState(true);
+
+    const navigate = useNavigate();
+
+    const navigation = useNavigation();
 
     //fucntion for load questions
     function loadingQuestions() {
@@ -43,6 +49,10 @@ export default function Questions({messages, loadingAnswer, handleMessages, mess
             
     }
 
+    function navigateToChatPage() {
+        navigate(`chat?room=${nanoid()}`);
+    }
+
     //output
     return (
         <>
@@ -54,7 +64,7 @@ export default function Questions({messages, loadingAnswer, handleMessages, mess
                     {messages.map(((message, index) => 
                         <BotQuestion message={message} handleClick={handleClick} key={index}/>
                     ))}    
-                    <Link to={`chat?room=${nanoid()}`} className="bot--question accent">Do you want to contact support?</Link>  
+                    <button onClick={() => navigateToChatPage()} className="bot--question accent" disabled={navigation.state === "submitting"}>{navigation.state === "submitting" ? config.botPage.contactingSupportText : config.botPage.contactSupportText}</button>  
                 </div>
             </div>
             }

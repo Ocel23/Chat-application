@@ -44,6 +44,26 @@
     --h5-font-size-small: 1.333rem;
 }
 
+.page-loader--container {
+    position: absolute;
+    background-color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+.page-loader--heading {
+    color: var(--primary-color);
+    font-size: var(--h4-font-size-small);
+    text-align: center;
+    margin-top: 2em;
+}
+
+
 .not-found-page--container {
     display: flex;
     flex-direction: column;
@@ -293,6 +313,7 @@
     text-align: center;
     word-wrap: break-word;
     cursor: pointer;
+    width: auto;
 }
 
 .m-16 {
@@ -764,7 +785,8 @@ input:focus, textarea:focus {
 
 .chat-message--left {
     display: grid;
-    grid-template-columns: 60px minmax(auto, 30%);
+    grid-template-columns: 60px minmax(auto, 70%);
+    grid-auto-flow: column;
     grid-template-rows: repeat(2, auto);
     justify-content: start;
     margin-bottom: 48px;
@@ -772,7 +794,7 @@ input:focus, textarea:focus {
 
 .chat-message--right {
     display: grid;
-    grid-template-columns: minmax(auto, 30%) 60px;
+    grid-template-columns: auto minmax(auto, 70%);
     grid-template-rows: repeat(2, auto);
     justify-content: end;
     margin-bottom: 48px;
@@ -910,7 +932,9 @@ input:focus, textarea:focus {
     font-size: var(--h4-font-size-small);
     font-weight: 500;
     margin-right: 2.25em;
-    cursor: pointer;
+    background-color: none;
+    border: 0;
+    outline: 0;
 }
 
 .dashboard-navbar--email, .dashboard-navbar--spacer {

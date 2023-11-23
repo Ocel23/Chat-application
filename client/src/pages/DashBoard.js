@@ -7,6 +7,7 @@ import Conversations from "../components/Conversations";
 import requireAuth from "../utils/requireAuth";
 import Footer from "../components/Footer";
 import showServerError from "../utils/showServerError";
+import PageLoader from "../components/PageLoader";
 
 export async function loader() {
 
@@ -84,13 +85,17 @@ export default function Dashboard() {
     }, [])
 
     return (
-        <div className="dashboard--container">
-            <Navbar setOffline={setOffline}/>
-            <div className="dashboard-container--content">
-                <Statictics statistics={statistics}/>
-                <Conversations conversations={conversations}/>    
+        <>
+            <PageLoader />
+            <div className="dashboard--container">
+                <Navbar setOffline={setOffline}/>
+                <div className="dashboard-container--content">
+                    <Statictics statistics={statistics}/>
+                    <Conversations conversations={conversations}/>    
+                </div>
+                <Footer />
             </div>
-            <Footer />
-        </div>
+        </>
+        
     )
 }
