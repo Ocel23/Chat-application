@@ -927,14 +927,14 @@ input:focus, textarea:focus {
 }
 
 .dashboard-navbar--log-out{
+    background: none;
+    border: 0;
+    outline: 0;
     color: var(--secondary-color);
     font-family: "Poppins-medium";
     font-size: var(--h4-font-size-small);
     font-weight: 500;
     margin-right: 2.25em;
-    background-color: none;
-    border: 0;
-    outline: 0;
 }
 
 .dashboard-navbar--email, .dashboard-navbar--spacer {
